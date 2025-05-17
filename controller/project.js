@@ -1,0 +1,332 @@
+const { default: mongoose } = require("mongoose");
+const func = require("../functions/project");
+const profileModel = require("../models/userProfile");
+ 
+
+const createProject = async (req, res) => {
+  try {
+    const { userProfileId } = req.body;
+
+    if (!req.files?.length) {
+      res.status(200).json({
+        status: "failed",
+        message: " At least one file is required",
+        sucess: false,
+      });
+    }
+    if (!userProfileId) {
+      res.status(200).json({
+        status: "failed",
+        message: "User ID is required",
+        sucess: false,
+      });
+    }
+
+    const user = await profileModel.findById(userProfileId);
+    if (!user ) {
+      res.status(200).json({
+        status: "failed",
+        message: " user not found",
+        sucess: false,
+      });
+    }
+    // console.log("first",userId)
+    const project = await func.createProject(req);
+    if (!project) {
+      res.status(200).json({
+        status: "failed",  
+        message: "project not saved", 
+        sucess: false,
+      });
+    }
+
+    return res.status(201).json({ status: "success", data: project, sucess: true });
+
+   
+  } catch (error) {
+    console.error(" error :", error);
+    res
+      .status(400)
+      .json({ status: "failed", message: error.message, sucess: false });
+  }
+};
+
+const updateProject = async (req, res) => {
+  try {
+    const { id, ...userData } = req.body;
+
+    // Check if the project ID is provided
+    if (!id) {
+      return res.status(400).json({
+        status: "failed",
+        message: "Project ID is required",
+        sucess: false,
+      });
+    }
+
+    // Fetch the existing project
+    const existingProject = await func.getProject(id);
+    if (!existingProject) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Project not found",
+        sucess: false,
+      });
+    }
+
+    // Update the project
+    const project = await func.updateProject(id, userData, req.files);
+    if (!project) {
+      return res.status(500).json({
+        status: "failed",
+        message: "Project not saved",
+        sucess: false,
+      });
+    }
+
+    // Success response
+    return res.status(200).json({ 
+      status: "success", 
+      data: project, 
+      sucess: true 
+    });
+
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ 
+      status: "failed", 
+      message: error.message, 
+      sucess: false 
+    });
+  }
+};
+
+const updateStatus = async (req, res) => {
+  try {
+    const { id, status } = req.body;
+    const project = await func.updateStatus(id, status);
+
+    if (project) {
+      return res.status(200).json({ status: "success", data: project, sucess: true });
+ } else {
+      return res
+        .status(400)
+        .json({ status: "failed", message: "Update status failed", sucess: false });
+    }
+  } catch (error) {
+    console.error("Error updating status:", error);
+    return res.status(500).json({
+      status: "failed",
+      sucess: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+const deleteProject = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const project = await func.deleteProject(id);
+
+    if (project) {
+      return res
+        .status(200)
+        .json({ message: "Deleted successfully", data: project, sucess: true });
+    } else {
+      return res
+        .status(200)
+        .json({ status: "failed", message: "Delete project failed", sucess: false });
+    }
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+const getProject = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const project = await func.getProject(id);
+
+    if (project.length == 0) {
+      return res
+        .status(200)
+        .json({ status: "failed", message: "invalid Id", sucess: false });
+    } else {
+      return res
+        .status(200)
+        .json({ status: "successful", data: project, sucess: true });
+    }
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+const getAllProject = async (req, res) => {
+  try {
+    const projects = await func.getAllProject(req);
+
+    if (projects.length == 0) {
+      return res
+        .status(200)
+        .json({ status: "failed", message: "invalid Id", sucess: false });
+    } else {
+      return res
+        .status(200)
+        .json({ status: "successful", data: projects, sucess: true });
+    }
+  } catch (error) {
+    console.error("Error fetching all projects:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+
+const getProjectByStatus = async (req, res) => {
+  try {
+    const { status } = req.query;
+    const project = await func.getStatus(status);
+
+    if (!project) {
+      return res.status(200).json({
+        status: "failed",
+        message: "Project not found",
+        sucess: false,
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ status: "successful", data: project, sucess: true });
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+const getProjectByLocationAndCategory = async (req, res) => {
+  try {
+    const { category, latitude, longitude } = req.query;
+    if (category && latitude && longitude) {
+      const project = await func.getProjectByLocationAndCategory(req);
+      if (project) {
+        return res
+          .status(200)
+          .json({ message: "projects", data: project, sucess: true });
+      }
+    } else if (category) {
+      const categorys = await func.getProjectCategory(req);
+
+      if (categorys) {
+        return res
+          .status(200)
+          .json({ status: "successful", data: categorys, sucess: true });
+      } 
+    } else if (latitude && longitude) {
+      const project = await func.getProjectByLocation(req);
+      if (project) {
+        return res
+          .status(200)
+          .json({ message: "projects", data: project, sucess: true });
+      }
+    } else {
+      return res.status(200).json({
+        status: "failed",
+        message: "Project not found",
+        sucess: false,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+const getProjectByStatusProProfileId = async (req, res) => {
+  try {
+    const { status, asignTo } = req.query;
+    const project = await func.getStatusByProProfileId(asignTo, status);
+
+    if (!project) {
+      return res.status(200).json({
+        status: "failed",
+        message: "Project not found",
+        sucess: false,
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ status: "successful", data: project, sucess: true });
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+const getProjectByStatusAndUserId = async (req, res) => {
+  try {
+    const { status, userProfileId } = req.query;
+    const project = await func.getProjectByStatusAndUserId(userProfileId, status);
+
+    if (!project) {
+      return res.status(200).json({
+        status: "failed",
+        message: "Project not found",
+        sucess: false,
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ status: "successful", data: project, sucess: true });
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+
+
+module.exports = {
+  createProject,
+  updateProject,
+  deleteProject,
+  getProject,
+  getAllProject,
+  updateStatus,
+  getProjectByStatus,
+  getProjectByLocationAndCategory,
+  getProjectByStatusProProfileId,
+  getProjectByStatusAndUserId,
+};
