@@ -84,9 +84,13 @@ const updateProjectStatusAndAsignTo = async (projectId, ProProfileId) => {
 const getProjectCategory = async (req) => {
   const { category } = req.query;
   const project = await projectModel.find({
-    category: category,
+    category:{ $in : category},
     isDeleted: false,
-  });
+  })
+  // .populate({
+  //   path:"userProfileId",
+  //   select:"-password"
+  // });
   return project;
 };
 
@@ -100,7 +104,7 @@ const getProjectByLocationAndCategory = async (req) => {
   const filter = {};
 
   if (category) {
-    filter.category = category;
+    filter.category ={$in: category};
   }
 
   if (longitude && latitude) {
@@ -115,10 +119,11 @@ const getProjectByLocationAndCategory = async (req) => {
     };
   }
 
-  const result = await projectModel.find(filter).populate({
-    path: "userProfileId",
-    select: "-password",
-  });
+  const result = await projectModel.find(filter)
+  // .populate({
+  //   path: "userProfileId",
+  //   select: "-password",
+  // });
 
   return result;
 };
@@ -139,11 +144,11 @@ const getProjectByLocation = async (req) => {
       },
     };
   }
-
-  const result = await projectModel.find(filter).populate({
-    path: "userProfileId",
-    select: "-password",
-  });
+  const result = await projectModel.find(filter)
+  // .populate({
+  //   path: "userProfileId",
+  //   select: "-password",
+  // });
 
   return result;
 };

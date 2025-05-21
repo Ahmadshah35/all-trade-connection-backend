@@ -55,7 +55,6 @@ const updateProject = async (req, res) => {
   try {
     const { id, ...userData } = req.body;
 
-    // Check if the project ID is provided
     if (!id) {
       return res.status(400).json({
         status: "failed",
@@ -64,7 +63,6 @@ const updateProject = async (req, res) => {
       });
     }
 
-    // Fetch the existing project
     const existingProject = await func.getProject(id);
     if (!existingProject) {
       return res.status(404).json({
@@ -74,7 +72,6 @@ const updateProject = async (req, res) => {
       });
     }
 
-    // Update the project
     const project = await func.updateProject(id, userData, req.files);
     if (!project) {
       return res.status(500).json({
@@ -84,7 +81,6 @@ const updateProject = async (req, res) => {
       });
     }
 
-    // Success response
     return res.status(200).json({ 
       status: "success", 
       data: project, 
@@ -233,12 +229,13 @@ const getProjectByLocationAndCategory = async (req, res) => {
           .json({ message: "projects", data: project, sucess: true });
       }
     } else if (category) {
+      
       const categorys = await func.getProjectCategory(req);
 
       if (categorys) {
         return res
           .status(200)
-          .json({ status: "successful", data: categorys, sucess: true });
+          .json({ message: "projects", data: categorys, sucess: true });
       } 
     } else if (latitude && longitude) {
       const project = await func.getProjectByLocation(req);

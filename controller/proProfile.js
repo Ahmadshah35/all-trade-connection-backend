@@ -86,7 +86,7 @@ const getProProfileByLocationAndCategory = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error fetching project:", error);
+    console.error("Error fetching proProfile:", error);
     return res.status(500).json({
       status: "failed",
       message: "Something went wrong",

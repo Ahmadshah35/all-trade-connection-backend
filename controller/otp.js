@@ -16,7 +16,7 @@ const verifyOtp = async (req, res) => {
         if (validate) {
           const deleteOtp = await otpFunc.deleteOtp(req);
           res.status(200).json({
-            message: "Otp verified sucessfully for resetPassword User ",
+            message: "Otp verified sucessfully for resetPassword User",
             sucess: true,
           });
         } else {
@@ -25,12 +25,12 @@ const verifyOtp = async (req, res) => {
             const deleteOtp = await otpFunc.deleteOtp(req);
             res.status(200).json({
               message:
-                "Otp verified sucessfully for resetPassword professional ",
+                "Otp verified sucessfully for resetPassword professional",
               sucess: true,
             });
           } else {
             res.status(200).json({
-              message: "email not found for resset password ",
+              message: "email not found for resset password",
               sucess: false,
             });
           }

@@ -28,7 +28,7 @@ const projectSchema = new mongoose.Schema(
     },
     category: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "category",
       },
     ],
@@ -78,8 +78,7 @@ const projectSchema = new mongoose.Schema(
     },
     zipCode: {
       type: String,
-      required: true,
-      match: [/^\d{5}(-\d{4})?$/, "Invalid zip code format"],
+      required: true
     },
     city: {
       type: String,
