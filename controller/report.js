@@ -8,7 +8,7 @@ const reportedByPro = async (req, res) => {
     if (!reportedByPro || !reportedProject || !reason) {
       return res
         .status(200)
-        .json({ error: "All required fields must be filled.", sucess: false });
+        .json({ error: "All required fields must be filled.", success: false });
     }
     const report = new reportModel({
       reportedByPro,
@@ -19,7 +19,7 @@ const reportedByPro = async (req, res) => {
     return res.status(201).json({
       message: "Report submitted successfully.",
       data: report,
-      sucess: true,
+      success: true,
     });
   } catch (error) {
     console.error("Error in reporting user:", error);
@@ -27,7 +27,7 @@ const reportedByPro = async (req, res) => {
       .status(500)
       .json({
         error: "Internal server error",
-        sucess: false,
+        success: false,
         error: error.message,
       });
   }
@@ -40,7 +40,7 @@ const reportedByUser = async (req, res) => {
     if (!reportedByUser || !reportedPro || !reason) {
       return res
         .status(200)
-        .json({ error: "All required fields must be filled.", sucess: false });
+        .json({ error: "All required fields must be filled.", success: false });
     }
     const report = new reportModel({
       reportedByUser,
@@ -51,7 +51,7 @@ const reportedByUser = async (req, res) => {
     return res.status(201).json({
       message: "Report submitted successfully.",
       data: report,
-      sucess: true,
+      success: true,
     });
   } catch (error) {
     console.error("Error in reporting user:", error);
@@ -59,7 +59,7 @@ const reportedByUser = async (req, res) => {
       .status(500)
       .json({
         error: "Internal server error",
-        sucess: false,
+        success: false,
         error: error.message,
       });
   }

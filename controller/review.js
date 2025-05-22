@@ -1,8 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const func = require("../functions/review");
 const reviewModel = require("../models/review");
-
 const proProfileFunc = require("../functions/proProfile")
+
+
 const createReview = async (req, res) => {
   try {
     const review = await func.createReview(req);
@@ -10,14 +11,14 @@ const createReview = async (req, res) => {
     const avgRating = rating.averageRating
     const updateProProfile = await proProfileFunc.updateAvgRating(review.proProfileId,avgRating)
     if (review) {
-      res.status(200).json({ status: "sucess", data: review, sucess: true });
+      res.status(200).json({ status: "sucess", data: review, success: true });
 
       return;
     } else {
       return res.status(200).json({
         status: "failed",
         message: "data isn't saved in Database",
-        sucess: false,
+        success: false,
       });
     }
   } catch (error) {
@@ -25,7 +26,7 @@ const createReview = async (req, res) => {
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -37,22 +38,23 @@ const updateReview = async (req, res) => {
     const review = await func.updateReview(id, userData);
     // console.log(profile)
     if (review) {
-      return  res.status(200).json({ status: "sucess", data: review, sucess: true });
+      return  res.status(200).json({ status: "sucess", data: review, success: true });
 
       
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "update failed", sucess: false });
+        .json({ status: "failed", message: "update failed", success: false });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
+
 const deleteReview = async (req, res) => {
   try {
     const { id } = req.body;
@@ -60,17 +62,17 @@ const deleteReview = async (req, res) => {
     if (review) {
       return res
         .status(200)
-        .json({ message: "deleted sucessfully", sucess: true });
+        .json({ message: "deleted sucessfully", success: true });
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "delete failed", sucess: false });
+        .json({ message: "delete failed", success: false });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -82,20 +84,21 @@ const getReview = async (req, res) => {
     if (review.length == 0) {
       return res
         .status(200)
-        .json({ message: "reviews not found", sucess: false });
+        .json({ message: "reviews not found", success: false });
     } else {
       return res
         .status(200)
-        .json({ message: "sucessful", data: review, sucess: true });
+        .json({ message: "sucessful", data: review, success: true });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
+
 const getAllReview = async (req, res) => {
   try {
     const { userId } = req.query;
@@ -103,17 +106,17 @@ const getAllReview = async (req, res) => {
     if (review.length == 0) {
       return res
         .status(200)
-        .json({ message: "reviews not found", sucess: false });
+        .json({ message: "reviews not found", success: false });
     } else {
       return res
         .status(200)
-        .json({ message: "sucessful", data: review, sucess: true });
+        .json({ message: "sucessful", data: review, success: true });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -126,17 +129,17 @@ const getAllReviewOnProProfile = async (req, res) => {
     if (!review) {
       return res
         .status(200)
-        .json({ message: "reviews not found", sucess: false });
+        .json({ message: "reviews not found", success: false });
     } else {
       return res
         .status(200)
-        .json({ message: "sucessful", data: review, sucess: true });
+        .json({ status: "sucessful", data: review, success: true });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -166,7 +169,7 @@ const getAverageRating = async (req, res) => {
       result.length > 0 ? result[0] : { averageRating: 0, totalReviews: 0 };
       const review = await func.getAllReviewOnProProfile({ proProfileId: proProfileId });
 
-    return res.status(200).json({ status: "successful", data: {rating,review} , sucess: true });
+    return res.status(200).json({ status: "successful", data: {rating,review} , success: true });
   } catch (error) {
     console.error("Error getting average rating:", error);
     
@@ -174,7 +177,7 @@ const getAverageRating = async (req, res) => {
       .status(500)
       .json({
         status: "failed",
-        sucess: false,
+        success: false,
         message: "Server error",
         error: error.message,
       });

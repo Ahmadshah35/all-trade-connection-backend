@@ -13,18 +13,18 @@ const createProposal = async (req, res) => {
     if (validiate) {
       return res
         .status(200)
-        .json({ status: "proposal already exist", sucess: true });
+        .json({ status: "proposal already exist", success: true });
     }else{
     const proposal = await func.createProposal(req);
 
     if (proposal) {
       return res
         .status(200)
-        .json({ status: "sucess", data: proposal, sucess: true });
+        .json({ status: "sucess", data: proposal, success: true });
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "incorrect data", sucess: false });
+        .json({ status: "failed", message: "incorrect data", success: false });
     }
   }
   } catch (error) {
@@ -42,19 +42,19 @@ const updateProposal = async (req, res) => {
     const proposal = await func.updateProposal(id, userData);
 
     if (proposal) {
-      res.status(200).json({ status: "sucess", data: proposal, sucess: true });
+      res.status(200).json({ status: "sucess", data: proposal, success: true });
 
       return;
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "update failed", sucess: false });
+        .json({ status: "failed", message: "update failed", success: false });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -65,17 +65,17 @@ const deleteProposal = async (req, res) => {
     if (proposal) {
       return res
         .status(200)
-        .json({ message: "deleted sucessfully", data: proposal, sucess: true });
+        .json({ message: "deleted sucessfully", success: true });
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "delete failed", sucess: false });
+        .json({ status: "failed", message: "delete failed", success: false });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -87,17 +87,17 @@ const getProposal = async (req, res) => {
     if (proposal.length == 0) {
       return res
         .status(200)
-        .json({ status: "incorrect credentials", sucess: false });
+        .json({ status: "incorrect credentials", success: false });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: proposal, sucess: true });
+        .json({ status: "sucessful", data: proposal, success: true });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -117,24 +117,24 @@ const updateProposalStatus = async (req, res) => {
         message: "sucessfuly Accept",
         Data: proposal,
         projectData: updateProject,
-        sucess: true,
+        success: true,
       });
     } else if (proposal.status == "Reject") {
       
       return res.status(200).json({
         message: "  proposal rejected sucessfully",
         data: proposal,
-        sucess: true,
+        success: true,
       });
     } else {
       return res
         .status(200)
-        .json({ message: "invalid Status ", sucess: false });
+        .json({ message: "invalid Status ", success: false });
     }
   } catch (error) {
     return res
       .status(400)
-      .json({ message: "something went wrong ", sucess: false });
+      .json({ message: "something went wrong ", success: false });
   }
 };
 
@@ -146,14 +146,14 @@ const getProposalByStatusAndProProfileId = async (req, res) => {
       status
     );
     if (proposal.length == 0) {
-      return res.status(200).json({ status: "proposal not found" });
+      return res.status(200).json({ status: "proposal not found",data:proposal, success: false });
     } else {
-      return res.status(200).json({ status: "sucessful", data: proposal });
+      return res.status(200).json({ status: "sucessful", data: proposal, success: true });
     }
   } catch (error) {
     return res
       .status(400)
-      .json({ status: "failed", message: "something went wrong" });
+      .json({ status: "failed", message: "something went wrong", success: false });
   }
 };
 
@@ -162,15 +162,15 @@ const getProposalByProjectId = async (req, res) => {
     const { projectId } = req.query;
     const proposal = await func.getProposalByProjectId(projectId);
     if (proposal.length == 0) {
-      return res.status(200).json({ status: "proposal not found", data :proposal });
+      return res.status(200).json({ status: "proposal not found", data :proposal, success: false });
     } else {
-      return res.status(200).json({ status: "sucessful", data: proposal });
+      return res.status(200).json({ status: "sucessful", data: proposal, success: true });
     }
   } catch (error) {
     console.log("error", error.message)
     return res
       .status(400)
-      .json({ status: "failed", message: "something went wrong" });
+      .json({ status: "failed", message: "something went wrong", success: false });
   }
 };
 

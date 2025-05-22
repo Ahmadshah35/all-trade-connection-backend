@@ -17,7 +17,7 @@ const verifyOtp = async (req, res) => {
           const deleteOtp = await otpFunc.deleteOtp(req);
           res.status(200).json({
             message: "Otp verified sucessfully for resetPassword User",
-            sucess: true,
+            success: true,
           });
         } else {
           const validatePro = await userFunc.validiateEmailPro(req);
@@ -26,12 +26,12 @@ const verifyOtp = async (req, res) => {
             res.status(200).json({
               message:
                 "Otp verified sucessfully for resetPassword professional",
-              sucess: true,
+                success: true,
             });
           } else {
             res.status(200).json({
               message: "email not found for resset password",
-              sucess: false,
+              success: false,
             });
           }
         }
@@ -39,7 +39,7 @@ const verifyOtp = async (req, res) => {
         if (type === "User") {
           const validate = await userFunc.validiateEmailUser(req);
           if (validate) {
-            res.status(200).json({ message: "already signUp", sucess: true });
+            res.status(200).json({ message: "already signUp", success: true });
           } else {
             const decode = jwt.verify(
               addSignUpToken,
@@ -65,7 +65,7 @@ const verifyOtp = async (req, res) => {
             const deleteOtp = await otpFunc.deleteOtp(req);
             return res.status(200).json({
               message: "sucessfully verify",
-              sucess: true,
+              success: true,
               data: {
                 _id: user._id,
                 email: user.email,
@@ -93,7 +93,7 @@ const verifyOtp = async (req, res) => {
             // console.log("data",req.body)
             const validate = await userFunc.validiateEmailPro(req);
             if (validate) {
-              res.status(200).json({ message: "already signUp", sucess: true });
+              res.status(200).json({ message: "already signUp", success: true });
             } else {
               const decode = jwt.verify(
                 addSignUpToken,
@@ -121,7 +121,7 @@ const verifyOtp = async (req, res) => {
               const deleteOtp = await otpFunc.deleteOtp(req);
               return res.status(200).json({
                 message: "sucessfully verify",
-                sucess: true,
+                success: true,
                 data: {
                   _id: pro._id,
                   email: pro.email,
@@ -149,18 +149,18 @@ const verifyOtp = async (req, res) => {
               });
             }
           } else {
-            res.status(200).json({ message: "invalid Type", sucess: false });
+            res.status(200).json({ message: "invalid Type", success: false });
           }
         }
       }
     } else {
-      res.status(200).json({ message: "invalid Otp", sucess: false });
+      res.status(200).json({ message: "invalid Otp", success: false });
     }
   } catch (error) {
     console.log("Error :", error);
     res.status(400).json({
       message: "somrthing went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -172,19 +172,19 @@ const verify = async (req, res) => {
     if (verify) {
       res.status(200).json({
         message: "sucessfully verify",
-        sucess: true,
+        success: true,
         data: verify,
       });
 
       return;
     } else {
-      res.status(200).json({ message: "invalid Otp", sucess: false });
+      res.status(200).json({ message: "invalid Otp", success: false });
     }
   } catch (error) {
     console.log("Error :", error);
     res.status(400).json({
       message: "somrthing went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -201,7 +201,7 @@ const resendOtp = async (req, res) => {
       if (!getPro) {
         res.status(200).json({
           message: "email not found",
-          sucess: false,
+          success: false,
         });
       } else {
         const gen = await func.generateOtp(email);
@@ -215,7 +215,7 @@ const resendOtp = async (req, res) => {
           .status(200)
           .json({
             message: "sucessfully otp  sent",
-            sucess: true,
+            success: true,
             data: { ...userData, _id },
           });
       }
@@ -231,14 +231,14 @@ const resendOtp = async (req, res) => {
         .status(200)
         .json({
           message: "sucessfully otp  sent",
-          sucess: true,
+          success: true,
           data: { ...userData, _id },
         });
     }
   } catch (error) {
     res.status(400).json({
       message: "somrthing went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }

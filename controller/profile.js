@@ -21,12 +21,12 @@ const upadateProfile = async (req, res) => {
           .lean();
         res
           .status(200)
-          .json({ status: "sucess", data: userWithoutPassword, sucess: true });
+          .json({ status: "sucess", data: userWithoutPassword, success: true });
       } else {
         return res.status(200).json({
           status: "failed",
           message: "profile update failed",
-          sucess: false,
+          success: false,
           error: error.message,
         });
       }
@@ -38,7 +38,7 @@ const upadateProfile = async (req, res) => {
         return res.status(200).json({
           status: "failed",
           message: "Invalid profile ID",
-          sucess: false,
+          success: false,
         });
       }
 
@@ -47,7 +47,7 @@ const upadateProfile = async (req, res) => {
         return res.status(200).json({
           status: "failed",
           message: "Profile not found",
-          sucess: false,
+          success: false,
         });
       }
 
@@ -66,23 +66,23 @@ const upadateProfile = async (req, res) => {
           .lean();
         return res
           .status(200)
-          .json({ status: "success", data: userWithoutPassword, sucess: true });
+          .json({ status: "success", data: userWithoutPassword, success: true });
       } else {
         return res
           .status(200)
-          .json({ status: "failed", message: "Update failed", sucess: false });
+          .json({ status: "failed", message: "Update failed", success: false });
       }
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "invalid type", sucess: false });
+        .json({ status: "failed", message: "invalid type", success: false });
     }
   } catch (error) {
     console.log("Error : ", error);
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -97,7 +97,7 @@ const getProfile = async (req, res) => {
       if (!profile) {
         return res
           .status(200)
-          .json({ status: "profile not found", sucess: false });
+          .json({ status: "profile not found", success: false });
       } else {
         const userWithoutPassword = await userProfileModel
           .findById(id)
@@ -108,7 +108,7 @@ const getProfile = async (req, res) => {
           .json({
             status: "sucessful",
             data: userWithoutPassword,
-            sucess: true,
+            success: true,
           });
       }
     } else if (type == "Professional") {
@@ -117,7 +117,7 @@ const getProfile = async (req, res) => {
         return res.status(200).json({
           status: "failed",
           message: "No profiles found",
-          sucess: false,
+          success: false,
         });
       } else {
         const proProfileId = profile._id
@@ -131,18 +131,18 @@ const getProfile = async (req, res) => {
         return res.status(200).json({
           status: "successful",
           data:{ ...userWithoutPassword,reviews,reviewLength},
-          sucess: true,
+          success: true,
         });
       }
     } else {
-      return res.status(200).json({ status: "invalid type", sucess: false });
+      return res.status(200).json({ status: "invalid type", success: false });
     }
   } catch (error) {
     console.error(" error :", error);
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -155,18 +155,18 @@ const getAllProfile = async (req, res) => {
     if (profile.length == 0) {
       return res
         .status(200)
-        .json({ status: "profile not found", sucess: false });
+        .json({ status: "profile not found", success: false });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: profile, sucess: true });
+        .json({ status: "sucessful", data: profile, success: true });
     }
   } catch (error) {
     console.error(" error :", error);
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }

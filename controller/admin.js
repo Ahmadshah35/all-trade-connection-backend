@@ -9,14 +9,14 @@ const signUpAdmin = async (req, res) => {
     if (validate) {
       return res
         .status(400)
-        .json({ message: "Email already exists", sucess: false });
+        .json({ message: "Email already exists", success: false });
     }
 
     const admin = await func.signUpAdmin(req);
     if (!admin) {
       return res
         .status(400)
-        .json({ message: "Admin creation failed", sucess: false });
+        .json({ message: "Admin creation failed", success: false });
     }
 
     const token = jwt.sign(
@@ -33,7 +33,7 @@ const signUpAdmin = async (req, res) => {
 
     return res.status(200).json({
       message: "Successfully created",
-      sucess: true,
+      success: true,
       data: adminWithoutPassword,
       token: token,
     });
@@ -41,7 +41,7 @@ const signUpAdmin = async (req, res) => {
     console.error("error :", error);
     return res.status(500).json({
       message: "Something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -53,7 +53,7 @@ const loginAdmin = async (req, res) => {
     if (!validate) {
       return res
         .status(400)
-        .json({ message: "Email not found", sucess: false });
+        .json({ message: "Email not found", success: false });
     }
 
     const { password } = req.body;
@@ -63,14 +63,14 @@ const loginAdmin = async (req, res) => {
     if (!admin) {
       return res
         .status(404)
-        .json({ message: "Admin not found", sucess: false });
+        .json({ message: "Admin not found", success: false });
     }
 
     const compare = await func.comparePassword(password, admin.password);
     if (!compare) {
       return res
         .status(401)
-        .json({ message: "Invalid password", sucess: false });
+        .json({ message: "Invalid password", success: false });
     }
 
     const token = jwt.sign(
@@ -87,7 +87,7 @@ const verified = await func.isVerifiedAdmin(email)
 
     return res.status(200).json({
       message: "Login successful",
-      sucess: true,
+      success: true,
       data: adminWithoutPassword,
       token: token,
     });
@@ -95,7 +95,7 @@ const verified = await func.isVerifiedAdmin(email)
     console.error("Login failed:", error);
     return res.status(500).json({
       message: "Something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -118,24 +118,24 @@ const resetAdminPassword = async (req, res) => {
           .lean();
         return res.status(200).json({
           message: "Password updated successfully",
-          sucess: true,
+          success: true,
           data: adminWithoutPassword,
         });
       } else {
         return res
           .status(400)
-          .json({ message: "Password update failed", sucess: false });
+          .json({ message: "Password update failed", success: false });
       }
     } else {
       return res
         .status(400)
-        .json({ message: "Invalid email provided", sucess: false });
+        .json({ message: "Invalid email provided", success: false });
     }
   } catch (error) {
     console.error("Password reset failed:", error);
     return res.status(500).json({
       message: "Something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -157,24 +157,24 @@ const resetAdminEmail = async (req, res) => {
           .lean();
         return res.status(200).json({
           message: "Email updated successfully",
-          sucess: true,
+          success: true,
           data: adminWithoutPassword,
         });
       } else {
         return res
           .status(400)
-          .json({ message: "Email update failed", sucess: false });
+          .json({ message: "Email update failed", success: false });
       }
     } else {
       return res
         .status(400)
-        .json({ message: "Invalid email provided", sucess: false });
+        .json({ message: "Invalid email provided", success: false });
     }
   } catch (error) {
     console.error("Email update failed:", error);
     return res.status(500).json({
       message: "Something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }

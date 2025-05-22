@@ -15,22 +15,22 @@ const createLocation = async (req, res) => {
         const created = await userFunc.profileCreated(userProfileId);
         return res
           .status(200)
-          .json({ status: "sucess", data: {location, profileCreated: created.profileCreated}, sucess: true });
+          .json({ status: "sucess", data: {location, profileCreated: created.profileCreated}, success: true });
       } else if (proProfileId) {
         const created = await proFunc.proProfileCreated(proProfileId);
         return res
           .status(200)
-          .json({ status: "sucess", data:{ location , profileCreated: created.profileCreated}, sucess: true });
+          .json({ status: "sucess", data:{ location , profileCreated: created.profileCreated}, success: true });
       } else {
         return res
           .status(200)
-          .json({ message: "profile id required", sucess: false });
+          .json({ message: "profile id required", success: false });
       }
     } else {
       return res.status(200).json({
         status: "failed",
         message: "data isn't saved in Database",
-        sucess: false,
+        success: false,
       });
     }
   } catch (error) {
@@ -38,7 +38,7 @@ const createLocation = async (req, res) => {
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -50,19 +50,19 @@ const upadateLocation = async (req, res) => {
     const location = await func.updateLocation(id, userData);
     // console.log(profile)
     if (location) {
-      res.status(200).json({ status: "sucess", data: location, sucess: true });
+      res.status(200).json({ status: "sucess", data: location, success: true });
       return;
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "update failed", sucess: false });
+        .json({ status: "failed", message: "update failed", success: false });
     }
   } catch (error) {
     console.error("error :", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -75,19 +75,19 @@ const deleteLocation = async (req, res) => {
       return res.status(200).json({
         message: "Deleted successfully",
         data: location,
-        sucess: true,
+        success: true,
       });
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "Delete failed", sucess: false });
+        .json({ status: "failed", message: "Delete failed", success: false });
     }
   } catch (error) {
     console.error("Something went wrong", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -100,18 +100,18 @@ const getLocation = async (req, res) => {
       return res.status(200).json({
         status: "failed",
         message: "location not found",
-        sucess: false,
+        success: false,
       });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: location, sucess: true });
+        .json({ status: "sucessful", data: location, success: true });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -124,18 +124,18 @@ const getAllLocation = async (req, res) => {
       return res.status(200).json({
         status: "failed",
         message: "location not found",
-        sucess: false,
+        success: false,
       });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: location, sucess: true });
+        .json({ status: "sucessful", data: location, success: true });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -148,17 +148,17 @@ const getLocationByProProfileId = async (req, res) => {
       return res.status(200).json({
         status: "failed",
         message: "location not found",
-        sucess: false,
+        success: false,
       });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: location, sucess: true });
+        .json({ status: "sucessful", data: location, success: true });
     }
   } catch (error) {
     console.error("Error in get location:", error.message);
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Internal server error",
       error: error.message,
     });
@@ -170,13 +170,13 @@ const updateSelectedProfessionalLocation = async (req, res) => {
     const locations = await func.updateSelectedProfessionalLocation(req);
     if (!locations) {
       return res.status(404).json({
-        sucess: false,
+        success: false,
         message: "Location not found ",
       });
     }
     const updateProfile = await func.addProfessionalLocation(locations);
     return res.status(200).json({
-      sucess: true,
+      success: true,
       message: " location updated successfully",
       data: locations,
       profileData: updateProfile,
@@ -184,7 +184,7 @@ const updateSelectedProfessionalLocation = async (req, res) => {
   } catch (error) {
     console.error("Error updating selected location:", error.message);
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Internal server error",
       error: error.message,
     });
@@ -197,13 +197,13 @@ const updateSelectedUserLocation = async (req, res) => {
     const locations = await func.updateSelectedUserLocation(req);
     if (!locations) {
       return res.status(404).json({
-        sucess: false,
+        success: false,
         message: "Location not found ",
       });
     }
     const updateProfile = await func.addUserLocation(locations);
     return res.status(200).json({
-      sucess: true,
+      success: true,
       message: " location updated successfully",
       data: locations,
       profileData: updateProfile,
@@ -211,7 +211,7 @@ const updateSelectedUserLocation = async (req, res) => {
   } catch (error) {
     console.error("Error updating selected location:", error.message);
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Internal server error",
       error: error.message,
     });

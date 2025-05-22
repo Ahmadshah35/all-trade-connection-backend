@@ -11,14 +11,14 @@ const createProject = async (req, res) => {
       res.status(200).json({
         status: "failed",
         message: " At least one file is required",
-        sucess: false,
+        success: false,
       });
     }
     if (!userProfileId) {
       res.status(200).json({
         status: "failed",
         message: "User ID is required",
-        sucess: false,
+        success: false,
       });
     }
 
@@ -27,7 +27,7 @@ const createProject = async (req, res) => {
       res.status(200).json({
         status: "failed",
         message: " user not found",
-        sucess: false,
+        success: false,
       });
     }
     // console.log("first",userId)
@@ -36,18 +36,18 @@ const createProject = async (req, res) => {
       res.status(200).json({
         status: "failed",  
         message: "project not saved", 
-        sucess: false,
+        success: false,
       });
     }
 
-    return res.status(201).json({ status: "success", data: project, sucess: true });
+    return res.status(201).json({ status: "success", data: project, success: true });
 
    
   } catch (error) {
     console.error(" error :", error);
     res
       .status(400)
-      .json({ status: "failed", message: error.message, sucess: false });
+      .json({ status: "failed", message: error.message, success: false });
   }
 };
 
@@ -59,7 +59,7 @@ const updateProject = async (req, res) => {
       return res.status(400).json({
         status: "failed",
         message: "Project ID is required",
-        sucess: false,
+        success: false,
       });
     }
 
@@ -68,7 +68,7 @@ const updateProject = async (req, res) => {
       return res.status(404).json({
         status: "failed",
         message: "Project not found",
-        sucess: false,
+        success: false,
       });
     }
 
@@ -77,14 +77,14 @@ const updateProject = async (req, res) => {
       return res.status(500).json({
         status: "failed",
         message: "Project not saved",
-        sucess: false,
+        success: false,
       });
     }
 
     return res.status(200).json({ 
       status: "success", 
       data: project, 
-      sucess: true 
+      success: true 
     });
 
   } catch (error) {
@@ -92,7 +92,7 @@ const updateProject = async (req, res) => {
     return res.status(500).json({ 
       status: "failed", 
       message: error.message, 
-      sucess: false 
+      success: false 
     });
   }
 };
@@ -103,17 +103,17 @@ const updateStatus = async (req, res) => {
     const project = await func.updateStatus(id, status);
 
     if (project) {
-      return res.status(200).json({ status: "success", data: project, sucess: true });
+      return res.status(200).json({ status: "success", data: project, success: true });
  } else {
       return res
         .status(400)
-        .json({ status: "failed", message: "Update status failed", sucess: false });
+        .json({ status: "failed", message: "Update status failed", success: false });
     }
   } catch (error) {
     console.error("Error updating status:", error);
     return res.status(500).json({
       status: "failed",
-      sucess: false,
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
@@ -128,16 +128,17 @@ const deleteProject = async (req, res) => {
     if (project) {
       return res
         .status(200)
-        .json({ message: "Deleted successfully", data: project, sucess: true });
+        .json({ message: "Deleted successfully", success: true });
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "Delete project failed", sucess: false });
+        .json({ status: "failed", message: "Delete project failed", success: false });
     }
   } catch (error) {
     console.error("Error deleting project:", error);
     return res.status(500).json({
       status: "failed",
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
@@ -152,16 +153,17 @@ const getProject = async (req, res) => {
     if (project.length == 0) {
       return res
         .status(200)
-        .json({ status: "failed", message: "invalid Id", sucess: false });
+        .json({ status: "failed", message: "invalid Id", success: false });
     } else {
       return res
         .status(200)
-        .json({ status: "successful", data: project, sucess: true });
+        .json({ status: "successful", data: project, success: true });
     }
   } catch (error) {
     console.error("Error fetching project:", error);
     return res.status(500).json({
       status: "failed",
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
@@ -175,16 +177,17 @@ const getAllProject = async (req, res) => {
     if (projects.length == 0) {
       return res
         .status(200)
-        .json({ status: "failed", message: "invalid Id", sucess: false });
+        .json({ status: "failed", message: "invalid Id", success: false });
     } else {
       return res
         .status(200)
-        .json({ status: "successful", data: projects, sucess: true });
+        .json({ status: "successful", data: projects, success: true });
     }
   } catch (error) {
     console.error("Error fetching all projects:", error);
     return res.status(500).json({
       status: "failed",
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
@@ -201,17 +204,18 @@ const getProjectByStatus = async (req, res) => {
       return res.status(200).json({
         status: "failed",
         message: "Project not found",
-        sucess: false,
+        success: false,
       });
     }
 
     return res
       .status(200)
-      .json({ status: "successful", data: project, sucess: true });
+      .json({ status: "successful", data: project, success: true });
   } catch (error) {
     console.error("Error fetching project:", error);
     return res.status(500).json({
       status: "failed",
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
@@ -226,7 +230,7 @@ const getProjectByLocationAndCategory = async (req, res) => {
       if (project) {
         return res
           .status(200)
-          .json({ message: "projects", data: project, sucess: true });
+          .json({ message: "projects", data: project, success: true });
       }
     } else if (category) {
       
@@ -235,26 +239,27 @@ const getProjectByLocationAndCategory = async (req, res) => {
       if (categorys) {
         return res
           .status(200)
-          .json({ message: "projects", data: categorys, sucess: true });
+          .json({ message: "projects", data: categorys, success: true });
       } 
     } else if (latitude && longitude) {
       const project = await func.getProjectByLocation(req);
       if (project) {
         return res
           .status(200)
-          .json({ message: "projects", data: project, sucess: true });
+          .json({ message: "projects", data: project, success: true });
       }
     } else {
       return res.status(200).json({
         status: "failed",
         message: "Project not found",
-        sucess: false,
+        success: false,
       });
     }
   } catch (error) {
     console.error("Error fetching project:", error);
     return res.status(500).json({
       status: "failed",
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
@@ -270,17 +275,18 @@ const getProjectByStatusProProfileId = async (req, res) => {
       return res.status(200).json({
         status: "failed",
         message: "Project not found",
-        sucess: false,
+        success: false,
       });
     }
 
     return res
       .status(200)
-      .json({ status: "successful", data: project, sucess: true });
+      .json({ status: "successful", data: project, success: true });
   } catch (error) {
     console.error("Error fetching project:", error);
     return res.status(500).json({
       status: "failed",
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
@@ -295,18 +301,20 @@ const getProjectByStatusAndUserId = async (req, res) => {
     if (!project) {
       return res.status(200).json({
         status: "failed",
+        success: false,
         message: "Project not found",
-        sucess: false,
+        success: false,
       });
     }
 
     return res
       .status(200)
-      .json({ status: "successful", data: project, sucess: true });
+      .json({ status: "successful", data: project, success: true });
   } catch (error) {
     console.error("Error fetching project:", error);
     return res.status(500).json({
-      status: "failed",
+      status: "failed"
+      , success: false,
       message: "Something went wrong",
       error: error.message,
     });

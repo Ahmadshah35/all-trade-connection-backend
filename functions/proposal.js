@@ -47,6 +47,11 @@ const getProposalByStatusAndProProfileId = async (proProfileId, status) => {
   const proposal = await proposalModel.find({
     proProfileId: proProfileId,
     status: status,
+  }).populate({
+    path:"proProfileId",
+    select:"-password"
+  }).populate({
+    path:"projectId"
   });
   // console.log("first",proposal)
   return proposal;

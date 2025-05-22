@@ -34,7 +34,7 @@ const signUp = async (req, res) => {
       const validate = await func.validiateEmailUser(req);
       if (validate) {
         return res.status(200).json({
-          sucess: false,
+          success: false,
           message: "Email is Already Taken!",
         });
       } else {
@@ -69,7 +69,7 @@ const signUp = async (req, res) => {
         const send = await mailer.sendMail(userData);
 
         return res.status(200).json({
-          sucess: true,
+          success: true,
           message: "Otp sent Successfully!",
           data: {
             email,
@@ -94,7 +94,7 @@ const signUp = async (req, res) => {
       const validate = await func.validiateEmailPro(req);
       if (validate) {
         return res.status(200).json({
-          sucess: false,
+          success: false,
           message: "Email is Already Taken!",
         });
       } else {
@@ -133,7 +133,7 @@ const signUp = async (req, res) => {
         const send = await mailer.sendMail(userData);
 
         return res.status(200).json({
-          sucess: true,
+          success: true,
           message: "Otp sent Successfully!",
           data: {
             email,
@@ -160,14 +160,14 @@ const signUp = async (req, res) => {
       }
     } else {
       return res.status(200).json({
-        sucess: false,
+        success: false,
         message: "invalid type",
       });
     }
   } catch (error) {
     console.log("Having Errors:", error);
     return res.status(403).json({
-      sucess: false,
+      success: false,
       message: "Having Errors",
       error: error.message,
     });
@@ -182,20 +182,20 @@ const login = async (req, res) => {
       if (!validates) {
         return res
           .status(200)
-          .json({ message: "email not found", sucess: false });
+          .json({ message: "email not found", success: false });
       } else {
         const { password } = req.body;
         const pro = await func.getPro(req);
         if (!pro) {
           return res
             .status(200)
-            .json({ message: "professional not found", sucess: false });
+            .json({ message: "professional not found", success: false });
         }
         const compare = await func.comparePassword(password, pro.password);
         if (!compare) {
           return res
             .status(200)
-            .json({ message: "Invalid password", sucess: false });
+            .json({ message: "Invalid password", success: false });
         }
         const token = jwt.sign(
           { userId: pro._id, email: pro.email },
@@ -209,7 +209,7 @@ const login = async (req, res) => {
           .lean();
         return res.status(200).json({
           status: "successful",
-          sucess: true,
+          success: true,
           data: proWithoutPassword,
           token: token,
         });
@@ -220,13 +220,13 @@ const login = async (req, res) => {
       if (!user) {
         return res
           .status(200)
-          .json({ message: "User not found", sucess: false });
+          .json({ message: "User not found", success: false });
       }
       const compare = await func.comparePassword(password, user.password);
       if (!compare) {
         return res
           .status(200)
-          .json({ message: "Invalid password", sucess: false });
+          .json({ message: "Invalid password", success: false });
       }
       const token = jwt.sign(
         { userId: user._id, email: user.email },
@@ -241,7 +241,7 @@ const login = async (req, res) => {
         .lean();
       return res.status(200).json({
         status: "successful",
-        sucess: true,
+        success: true,
         data: userWithoutPassword,
         token: token,
       });
@@ -250,7 +250,7 @@ const login = async (req, res) => {
     console.error("login failed:", error);
     return res.status(500).json({
       message: "Something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -265,7 +265,7 @@ const setNewPassword = async (req, res) => {
       if (!validates) {
         return res
           .status(200)
-          .json({ message: "email not found", sucess: false });
+          .json({ message: "email not found", success: false });
       } else {
         const { email, newPassword } = req.body;
 
@@ -273,7 +273,7 @@ const setNewPassword = async (req, res) => {
         if (!resetPassword) {
           return res.status(200).json({
             message: "Password reset failed",
-            sucess: "false",
+            success: "false",
           });
         }
 
@@ -284,7 +284,7 @@ const setNewPassword = async (req, res) => {
 
         return res.status(200).json({
           message: " Password reset successfully ",
-          sucess: true,
+          success: true,
           data: userWithoutPassword,
         });
       }
@@ -295,7 +295,7 @@ const setNewPassword = async (req, res) => {
       if (!resetPassword) {
         return res.status(200).json({
           message: "Password reset failed",
-          sucess: "false",
+          success: "false",
         });
       }
 
@@ -306,14 +306,14 @@ const setNewPassword = async (req, res) => {
 
       return res.status(200).json({
         message: "Password reset successfully",
-        sucess: true,
+        success: true,
         data: userWithoutPassword,
       });
     }
   } catch (error) {
     return res.status(500).json({
       message: "something went wrong",
-      sucess: false,
+      success: false,
       error: error.message,
     });
   }
@@ -324,19 +324,19 @@ const deleteUser = async (req, res) => {
     const profile = await func.deleteUser(req);
     if (profile) {
       return res.status(200).json({
-        sucess: true,
+        success: true,
         message: "user deleted sucessfully",
       });
     } else {
       return res
         .status(200)
-        .json({ sucess: false, message: "Can not find any user to delete!" });
+        .json({ success: false, message: "Can not find any user to delete!" });
     }
   } catch (error) {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -346,12 +346,12 @@ const deletePro = async (req, res) => {
     const profile = await func.deletePro(req);
     if (profile) {
       return res.status(200).json({
-        sucess: true,
+        success: true,
         message: "user deleted sucessfully",
       });
     } else {
       return res.status(200).json({
-        sucess: false,
+        success: false,
         message: "Can not find any professional to delete!",
       });
     }
@@ -359,7 +359,7 @@ const deletePro = async (req, res) => {
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -374,7 +374,7 @@ const resetPassword = async (req, res) => {
       if (!validatePro) {
         return res
           .status(200)
-          .json({ message: "user not found", sucess: false });
+          .json({ message: "user not found", success: false });
       } else {
         const proPassword = await func.comparePassword(
           password,
@@ -383,7 +383,7 @@ const resetPassword = async (req, res) => {
         if (!proPassword) {
           return res
             .status(200)
-            .json({ message: "incorrect Password", sucess: false });
+            .json({ message: "incorrect Password", success: false });
         } else {
           const reset = await func.resetProPasswordById(
             validatePro._id,
@@ -391,7 +391,7 @@ const resetPassword = async (req, res) => {
           );
           return res
             .status(200)
-            .json({ message: " password reset sucessfully", sucess: true });
+            .json({ message: " password reset sucessfully", success: true });
         }
       }
     } else {
@@ -402,20 +402,20 @@ const resetPassword = async (req, res) => {
       if (!userPassword){
         return res
           .status(200)
-          .json({ message: "incorrect Password", sucess: false });
+          .json({ message: "incorrect Password", success: false });
       } else {
         const reset = await func.resetUserPasswordById(
           validateUser._id,
           newPassword
         );
-        return res.status(200).json({ message: "password reset sucessfully", sucess:true });
+        return res.status(200).json({ message: "password reset sucessfully", success:true });
       }
     }
   } catch (error) {
     console.log("error", error);
     return res
       .status(400)
-      .json({ message: "something went wrong", sucess: false });
+      .json({ message: "something went wrong", success: false });
   }
 };
 
