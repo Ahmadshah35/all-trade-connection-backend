@@ -32,6 +32,18 @@ const updateProProfile = async (req,id, userData, files) => {
   }
 };
 
+const updateAvgRating = async (id,avgRating) => {
+
+  const updatedProfile = await proModel.findByIdAndUpdate(
+    id,
+     {$set:{avgRating:avgRating}
+     },
+    { new: true }
+  );
+  return updatedProfile;
+}
+
+
 const proProfileCreated = async (proProfileId) => {
   const profile = await proModel.findByIdAndUpdate(proProfileId,
     { $set:{profileCreated: true}},
@@ -152,5 +164,6 @@ module.exports = {
   getProProfileByLocationAndCategory,
   updateIncludingTheseDays,
   proProfileCreated,
-  getProProfiletByLocation
+  getProProfiletByLocation,
+  updateAvgRating
 };

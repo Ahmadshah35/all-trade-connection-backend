@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const reviewModel = require("../models/review")
 
 
@@ -39,11 +40,30 @@ const getAllReviewOnProProfile = async (proProfileId) => {
   return review;
 };
 
+
+const avgRating = async (proProfileId) => {
+  const result = await reviewModel.aggregate([
+    { $match: { proProfileId: new mongoose.Types.ObjectId(proProfileId) } },
+    {
+      $group: {
+        _id: "$proProfileId",
+        averageRating: { $avg: "$rating" },
+        totalReviews: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const rating =
+    result.length > 0 ? result[0] : { averageRating: 0, totalReviews: 0 };
+  return rating;
+};
+
 module.exports = {
 createReview,
 updateReview,
 deleteReview,
 getReview,
 getAllReview,
-getAllReviewOnProProfile
+getAllReviewOnProProfile,
+avgRating
 };

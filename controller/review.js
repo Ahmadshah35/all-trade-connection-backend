@@ -2,10 +2,13 @@ const { default: mongoose } = require("mongoose");
 const func = require("../functions/review");
 const reviewModel = require("../models/review");
 
+const proProfileFunc = require("../functions/proProfile")
 const createReview = async (req, res) => {
   try {
     const review = await func.createReview(req);
-
+    const rating = await func.avgRating(review.proProfileId)
+    const avgRating = rating.averageRating
+    const updateProProfile = await proProfileFunc.updateAvgRating(review.proProfileId,avgRating)
     if (review) {
       res.status(200).json({ status: "sucess", data: review, sucess: true });
 

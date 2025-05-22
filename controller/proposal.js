@@ -162,11 +162,12 @@ const getProposalByProjectId = async (req, res) => {
     const { projectId } = req.query;
     const proposal = await func.getProposalByProjectId(projectId);
     if (proposal.length == 0) {
-      return res.status(200).json({ status: "proposal not found" });
+      return res.status(200).json({ status: "proposal not found", data :proposal });
     } else {
       return res.status(200).json({ status: "sucessful", data: proposal });
     }
   } catch (error) {
+    console.log("error", error.message)
     return res
       .status(400)
       .json({ status: "failed", message: "something went wrong" });
