@@ -36,7 +36,7 @@ const getAllReview = async (userId) => {
 
 
 const getAllReviewOnProProfile = async (proProfileId) => {
-  const review = await reviewModel.find(proProfileId);
+  const review = await reviewModel.find({proProfileId:proProfileId});
   return review;
 };
 

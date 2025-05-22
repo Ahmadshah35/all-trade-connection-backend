@@ -3,6 +3,7 @@ const func = require("../functions/profile");
 const proFunc = require("../functions/proProfile");
 const userProfileModel = require("../models/userProfile");
 const proProfileModel = require("../models/proProfile");
+const reviewFunc = require("../functions/review")
 
 const upadateProfile = async (req, res) => {
   try {
@@ -119,13 +120,17 @@ const getProfile = async (req, res) => {
           sucess: false,
         });
       } else {
+        const proProfileId = profile._id
+        const reviews = await reviewFunc.getAllReviewOnProProfile(proProfileId)
+        console.log("reviews",reviews)
+        const reviewLength= reviews.length
         const userWithoutPassword = await proProfileModel
           .findById(id)
           .select("-password")
           .lean();
         return res.status(200).json({
           status: "successful",
-          data: userWithoutPassword,
+          data:{ ...userWithoutPassword,reviews,reviewLength},
           sucess: true,
         });
       }

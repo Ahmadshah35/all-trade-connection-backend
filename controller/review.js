@@ -60,7 +60,7 @@ const deleteReview = async (req, res) => {
     if (review) {
       return res
         .status(200)
-        .json({ message: "deleted sucessfully", data: review, sucess: true });
+        .json({ message: "deleted sucessfully", sucess: true });
     } else {
       return res
         .status(200)
@@ -82,11 +82,11 @@ const getReview = async (req, res) => {
     if (review.length == 0) {
       return res
         .status(200)
-        .json({ status: "incorrect credentials", sucess: false });
+        .json({ message: "reviews not found", sucess: false });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: review, sucess: true });
+        .json({ message: "sucessful", data: review, sucess: true });
     }
   } catch (error) {
     return res.status(400).json({
@@ -103,11 +103,11 @@ const getAllReview = async (req, res) => {
     if (review.length == 0) {
       return res
         .status(200)
-        .json({ status: "incorrect credentials", sucess: false });
+        .json({ message: "reviews not found", sucess: false });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: review, sucess: true });
+        .json({ message: "sucessful", data: review, sucess: true });
     }
   } catch (error) {
     return res.status(400).json({
@@ -126,11 +126,11 @@ const getAllReviewOnProProfile = async (req, res) => {
     if (!review) {
       return res
         .status(200)
-        .json({ status: "reviews not found", sucess: false });
+        .json({ message: "reviews not found", sucess: false });
     } else {
       return res
         .status(200)
-        .json({ status: "sucessful", data: review, sucess: true });
+        .json({ message: "sucessful", data: review, sucess: true });
     }
   } catch (error) {
     return res.status(400).json({

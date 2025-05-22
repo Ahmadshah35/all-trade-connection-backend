@@ -74,6 +74,7 @@ const profileSchema = new mongoose.Schema(
     },
     avgRating: {
       type: Number ,
+      default: 0
     },
     isVerified: {
       type: Boolean,

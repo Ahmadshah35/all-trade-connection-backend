@@ -26,7 +26,10 @@ const deleteProposal = async (id) => {
 };
 
 const getProposal = async (id) => {
-  const proposal = await proposalModel.findById(id);
+  const proposal = await proposalModel.findById(id).populate({
+    path :"proProfileId",
+    select:"-password"
+  });
   return proposal;
 };
 
