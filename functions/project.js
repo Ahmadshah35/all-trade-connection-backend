@@ -21,19 +21,24 @@ const createProject = async (req) => {
 };
 
 const updateProject = async (id, userData, files) => {
-  // Find the existing project
+
   const existingProject = await projectModel.findById(id);
 
-  // Update images only if new images are provided
+
   if (files?.images?.length) {
-    // Combine existing images with new images
-    userData.images = [
-      ...(existingProject.images || []),
-      ...files.images.map((file) => file.filename),
-    ];
+    const existingImages = existingProject.image || [];
+    const newImageNames = files.images.map((file) => file.filename);
+
+    const retainedImages = existingImages.filter((img) => newImageNames.includes(img));
+
+    const addedImages = newImageNames.filter((img) => !existingImages.includes(img));
+
+    userData.image = [...retainedImages, ...addedImages];
+  } else {
+    userData.image = [];
   }
 
-  // Update the project with the merged data
+
   const result = await projectModel.findByIdAndUpdate(
     id,
     { $set: { ...userData } },

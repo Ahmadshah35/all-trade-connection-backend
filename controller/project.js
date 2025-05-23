@@ -56,16 +56,16 @@ const updateProject = async (req, res) => {
     const { id, ...userData } = req.body;
 
     if (!id) {
-      return res.status(400).json({
+      return res.status(200).json({
         status: "failed",
         message: "Project ID is required",
         success: false,
       });
     }
 
-    const existingProject = await func.getProject(id);
+    const existingProject = await func.getProject(id); 
     if (!existingProject) {
-      return res.status(404).json({
+      return res.status(200).json({
         status: "failed",
         message: "Project not found",
         success: false,
@@ -73,26 +73,28 @@ const updateProject = async (req, res) => {
     }
 
     const project = await func.updateProject(id, userData, req.files);
+
     if (!project) {
-      return res.status(500).json({
+      return res.status(200).json({
         status: "failed",
         message: "Project not saved",
         success: false,
       });
-    }
+    }else{
 
-    return res.status(200).json({ 
-      status: "success", 
-      data: project, 
-      success: true 
+    return res.status(200).json({
+      status: "success",
+      data: project,
+      success: true,
     });
+  }
 
   } catch (error) {
     console.error("Error:", error);
-    return res.status(500).json({ 
-      status: "failed", 
-      message: error.message, 
-      success: false 
+    return res.status(400).json({
+      status: "failed",
+      message: error.message,
+      success: false,
     });
   }
 };
