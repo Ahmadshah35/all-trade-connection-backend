@@ -113,6 +113,7 @@ const updateProposalStatus = async (req, res) => {
         projectId,
         proProfileId
       );
+      const updateProjectStatus= await  projectFunc.updateProjectStatusByProjectId(projectId)
       return res.status(200).json({
         message: "sucessfuly Accept",
         Data: proposal,
@@ -122,7 +123,7 @@ const updateProposalStatus = async (req, res) => {
     } else if (proposal.status == "Reject") {
       
       return res.status(200).json({
-        message: "  proposal rejected sucessfully",
+        message: " proposal rejected sucessfully",
         data: proposal,
         success: true,
       });

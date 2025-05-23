@@ -50,7 +50,7 @@ const deleteProject = async (id) => {
 };
 
 const getProject = async (id) => {
-  const project = await projectModel.findById(id, { isDeleted: false });
+  const project = await projectModel.findById(id, { isDeleted: false }).populate({path:"asignTo",select:"-password"});
   return project;
 };
 
@@ -186,6 +186,16 @@ const searchProject = async (req) => {
   return result;
 };
 
+const updateProjectStatusByProjectId = async (projectId) => {
+  const project = await projectModel.find({
+    _id: projectId,
+    status: "Hired",
+    isDeleted: false,
+  });
+  return project;
+};
+
+
 module.exports = {
   createProject,
   updateProject,
@@ -200,5 +210,6 @@ module.exports = {
   getStatusByProProfileId,
   getProjectByStatusAndUserId,
   updateProjectStatusAndAsignTo,
-  searchProject
+  searchProject,
+  updateProjectStatusByProjectId
 };
