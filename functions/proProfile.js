@@ -1,35 +1,36 @@
 const proModel = require("../models/proProfile");
 
-const updateProProfile = async (req,id, userData, files) => {
-  const existingProfile = await proModel.findById(id);
-  if (!existingProfile) {
-    console.log("Profile not found");
+const updateProProfile = async (id, userData, files) => {
+  const existingProfile = await proModel.findById({_id:id});
+  if (!existingProfile) throw new Error("Profile not found");
+
+  const existingPortfolio = existingProfile.portfolio || [];
+  const newPortfolioNames = files?.portfolio?.map(file => file.filename) || [];
+
+  const retainedPortfolio = existingPortfolio.filter(file => newPortfolioNames.includes(file));
+  const addedPortfolio = newPortfolioNames.filter(file => !existingPortfolio.includes(file));
+  userData.portfolio = [...retainedPortfolio, ...addedPortfolio];
+
+  const existingCertificates = existingProfile.certificate || [];
+  const newCertificateNames = files?.certificate?.map(file => file.filename) || [];
+
+  const retainedCertificates = existingCertificates.filter(file => newCertificateNames.includes(file));
+  const addedCertificates = newCertificateNames.filter(file => !existingCertificates.includes(file));
+  userData.certificate = [...retainedCertificates, ...addedCertificates];
+
+  if (files?.image?.length) {
+    userData.image = files.image[0].filename;
   } else {
-    const newPortfolio = Array.isArray(files["portfolio"])
-      ? files["portfolio"].map((file) => file.filename)
-      : [];
-    const newCertificate = Array.isArray(files["certificate"])
-      ? files["certificate"].map((file) => file.filename)
-      : [];
-
-    userData.portfolio = Array.isArray(existingProfile.portfolio)
-      ? [...existingProfile.portfolio, ...newPortfolio]
-      : newPortfolio;
-
-    userData.certificate = Array.isArray(existingProfile.certificate)
-      ? [...existingProfile.certificate, ...newCertificate]
-      : newCertificate;
-
-    const updatedProfile = await proModel.findByIdAndUpdate(
-      id,
-      { $set:  {...userData,
-        image: req.files.image?.[0]?.filename || null,
-      }
-       },
-      { new: true }
-    );
-    return updatedProfile;
+    userData.image = existingProfile.image || null;
   }
+
+  const updatedProfile = await proModel.findByIdAndUpdate(
+    id,
+    { $set: userData },
+    { new: true }
+  );
+
+  return updatedProfile;
 };
 
 const updateAvgRating = async (id,avgRating) => {

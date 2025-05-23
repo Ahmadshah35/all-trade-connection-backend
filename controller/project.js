@@ -62,7 +62,7 @@ const updateProject = async (req, res) => {
         success: false,
       });
     }
-
+ 
     const existingProject = await func.getProject(id); 
     if (!existingProject) {
       return res.status(200).json({

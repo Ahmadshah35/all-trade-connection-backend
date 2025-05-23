@@ -26,7 +26,7 @@ const updateProject = async (id, userData, files) => {
 
 
   if (files?.images?.length) {
-    const existingImages = existingProject.image || [];
+    const existingImages = existingProject.images || [];
     const newImageNames = files.images.map((file) => file.filename);
 
     const retainedImages = existingImages.filter((img) => newImageNames.includes(img));

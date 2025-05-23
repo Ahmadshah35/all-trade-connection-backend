@@ -53,7 +53,6 @@ const upadateProfile = async (req, res) => {
       }
 
       const profile = await proFunc.updateProProfile(
-        req,
         id,
         userData,
         req.files
