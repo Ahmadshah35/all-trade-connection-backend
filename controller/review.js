@@ -121,7 +121,7 @@ const getAllReview = async (req, res) => {
   }
 };
 
-
+ 
 const getAllReviewOnProProfile = async (req, res) => {
   try {
     const { proProfileId } = req.query;
@@ -130,11 +130,12 @@ const getAllReviewOnProProfile = async (req, res) => {
       return res
         .status(200)
         .json({ message: "reviews not found", success: false });
-    } else {
-      return res
-        .status(200)
-        .json({ status: "sucessful", data: review, success: true });
-    }
+      } else {
+        const avdRating = await func.avgRating(proProfileId)
+        return res
+          .status(200)
+          .json({ message: "sucessful", data: {...review, avdRating}, success: true });
+      }
   } catch (error) {
     return res.status(400).json({
       status: "failed",

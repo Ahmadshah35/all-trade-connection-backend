@@ -159,6 +159,12 @@ const getStatusByProProfileId = async (asignTo, status) => {
     asignTo: asignTo,
     status: status,
     isDeleted: false,
+  }).populate({
+    path: "asignTo",
+    select: "-password",
+  }).populate({
+    path:"userId",
+    select:"-password"
   });
   return project;
 };
@@ -167,6 +173,21 @@ const getProjectByStatusAndUserId = async (userProfileId, status) => {
   const project = await projectModel.find({
     userProfileId: userProfileId,
     status: status,
+    isDeleted: false,
+  }).populate({
+    path: "userId",
+    select: "-password",
+  }).populate({
+    path:"asignTo",
+    select:"-password"
+  });
+  return project;
+
+}
+
+const getProjectByStatusAndUserProfileId = async (userId) => {
+  const project = await projectModel.find({
+    userId: userId,
     isDeleted: false,
   });
   return project;
@@ -211,5 +232,6 @@ module.exports = {
   getProjectByStatusAndUserId,
   updateProjectStatusAndAsignTo,
   searchProject,
-  updateProjectStatusByProjectId
+  updateProjectStatusByProjectId,
+  getProjectByStatusAndUserProfileId
 };

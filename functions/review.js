@@ -36,7 +36,10 @@ const getAllReview = async (userId) => {
 
 
 const getAllReviewOnProProfile = async (proProfileId) => {
-  const review = await reviewModel.find({proProfileId:proProfileId});
+  const review = await reviewModel.find({proProfileId:proProfileId}).populate({
+    path:"userId",
+    select:"-password"
+  });
   return review;
 };
 

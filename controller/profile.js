@@ -4,6 +4,7 @@ const proFunc = require("../functions/proProfile");
 const userProfileModel = require("../models/userProfile");
 const proProfileModel = require("../models/proProfile");
 const reviewFunc = require("../functions/review")
+const project= require("../functions/project")
 
 const upadateProfile = async (req, res) => {
   try {
@@ -99,6 +100,9 @@ const getProfile = async (req, res) => {
           .status(200)
           .json({ status: "profile not found", success: false });
       } else {
+        const userId= profile._id
+        const projects = await project.getProjectByStatusAndUserProfileId(userId)
+        const projectLength = projects.length
         const userWithoutPassword = await userProfileModel
           .findById(id)
           .select("-password")
@@ -107,7 +111,7 @@ const getProfile = async (req, res) => {
           .status(200)
           .json({
             status: "sucessful",
-            data: userWithoutPassword,
+            data:{ ...userWithoutPassword,projectLength},
             success: true,
           });
       }
@@ -124,13 +128,16 @@ const getProfile = async (req, res) => {
         const reviews = await reviewFunc.getAllReviewOnProProfile(proProfileId)
         console.log("reviews",reviews)
         const reviewLength= reviews.length
+        const status = "Completed"
+        const getProject = await project.getStatusByProProfileId(proProfileId,status)
+        const completedProject = getProject.length
         const userWithoutPassword = await proProfileModel
           .findById(id)
           .select("-password")
           .lean();
         return res.status(200).json({
           status: "successful",
-          data:{ ...userWithoutPassword,reviews,reviewLength},
+          data:{ ...userWithoutPassword,reviews,reviewLength,completedProject},
           success: true,
         });
       }
