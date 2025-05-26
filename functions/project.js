@@ -24,7 +24,6 @@ const updateProject = async (id, userData, files) => {
 
   const existingProject = await projectModel.findById(id);
 
-
   if (files?.images?.length) {
     const existingImages = existingProject.images || [];
     const newImageNames = files.images.map((file) => file.filename);

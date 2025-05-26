@@ -10,6 +10,7 @@ const proposalController = require("../controller/proposal")
 const categoryController = require("../controller/category")
 const reviewController = require("../controller/review")
 const reportController = require("../controller/report")
+const supportController= require("../controller/support")
 const { profileUpload, upload, projectUpload } = require("../middleware/upload");
 const router = express.Router();
 
@@ -88,13 +89,10 @@ router.get("/getAllReview", reviewController.getAllReview);
 router.get("/getAllReviewOnProProfile", reviewController.getAllReviewOnProProfile);
 router.get("/averageRating", reviewController.getAverageRating);
 
-
-
-
-
-
-
-
+//Support
+router.post("/createSupport",supportController.createSupport);
+router.get("/getSupport", supportController.getSupport);
+router.get("/getAllSupport", supportController.getAllSupport);
 
 
 
