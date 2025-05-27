@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const func = require("../functions/project");
 const profileModel = require("../models/userProfile");
+const proposalFunc= require("../functions/proposal")
  
 
 const createProject = async (req, res) => {
@@ -151,12 +152,12 @@ const getProject = async (req, res) => {
   try {
     const { id } = req.query;
     const project = await func.getProject(id);
-
-    if (project.length == 0) {
+    if (!project) {
       return res
         .status(200)
-        .json({ status: "failed", message: "invalid Id", success: false });
+        .json({ status: "failed", message: "project not found", success: false });
     } else {
+      // const proposals = await proposalFunc.getProposalByProjectId(project._id)
       return res
         .status(200)
         .json({ status: "successful", data: project, success: true });
@@ -179,7 +180,7 @@ const getAllProject = async (req, res) => {
     if (projects.length == 0) {
       return res
         .status(200)
-        .json({ status: "failed", message: "invalid Id", success: false });
+        .json({ status: "failed", message: "project not found", success: false });
     } else {
       return res
         .status(200)

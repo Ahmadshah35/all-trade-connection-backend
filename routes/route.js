@@ -30,6 +30,8 @@ router.post("/resendOtp", otpController.resendOtp);
 router.post("/createCategory",categoryController.createCategory );
 router.post("/deleteCategory",categoryController.deleteCategory );
 router.get("/getAllCategory",categoryController.getAllCategory );
+router.get("/getCategory",categoryController.getCategory );
+
 
 // Profile And ProProfile
 router.post( "/updateProfile", profileUpload.fields([{ name: "certificate", maxCount: 4 },{ name : "image" , maxCount: 1 }]), profileController.upadateProfile);

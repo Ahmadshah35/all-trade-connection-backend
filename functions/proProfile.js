@@ -4,13 +4,6 @@ const updateProProfile = async (id, userData, files) => {
   const existingProfile = await proModel.findById({_id:id});
   if (!existingProfile) throw new Error("Profile not found");
 
-  const existingPortfolio = existingProfile.portfolio || [];
-  const newPortfolioNames = files?.portfolio?.map(file => file.filename) || [];
-
-  const retainedPortfolio = existingPortfolio.filter(file => newPortfolioNames.includes(file));
-  const addedPortfolio = newPortfolioNames.filter(file => !existingPortfolio.includes(file));
-  userData.portfolio = [...retainedPortfolio, ...addedPortfolio];
-
   const existingCertificates = existingProfile.certificate || [];
   const newCertificateNames = files?.certificate?.map(file => file.filename) || [];
 

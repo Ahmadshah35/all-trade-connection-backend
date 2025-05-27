@@ -7,7 +7,7 @@ const createProject = async (req) => {
       parseFloat(req.body.longitude),
       parseFloat(req.body.latitude),
     ],
-    name: req.body.locationName,
+    locationName: req.body.locationName,
   };
   const { selectDate, ...otherData } = req.body;
 
@@ -17,7 +17,8 @@ const createProject = async (req) => {
     images: req.files.map((file) => file.filename),
   });
 
-  return await project.save();
+  const result = await project.save();
+  return result
 };
 
 const updateProject = async (id, userData, files) => {
@@ -37,7 +38,6 @@ const updateProject = async (id, userData, files) => {
     userData.image = [];
   }
 
-
   const result = await projectModel.findByIdAndUpdate(
     id,
     { $set: { ...userData } },
@@ -54,7 +54,7 @@ const deleteProject = async (id) => {
 };
 
 const getProject = async (id) => {
-  const project = await projectModel.findById(id, { isDeleted: false }).populate({path:"asignTo",select:"-password"});
+  const project = await projectModel.findById(id, { isDeleted: false }).populate({path:"asignTo",select:"-password"}).populate({path :"userProfileId", select:"-password"});
   return project;
 };
 
@@ -158,7 +158,7 @@ const getProjectByLocation = async (req) => {
 };
 
 
-const getStatusByProProfileId = async (asignTo, status) => {
+const getProjectByStatusAndProProfileId = async (asignTo, status) => {
   const project = await projectModel.find({
     asignTo: asignTo,
     status: status,
@@ -189,7 +189,7 @@ const getProjectByStatusAndUserId = async (userProfileId, status) => {
 
 }
 
-const getProjectByStatusAndUserProfileId = async (userId) => {
+const getProjectByUserProfileId = async (userId) => {
   const project = await projectModel.find({
     userId: userId,
     isDeleted: false,
@@ -232,10 +232,10 @@ module.exports = {
   getStatus,
   getProjectByLocationAndCategory,
   getProjectByLocation,
-  getStatusByProProfileId,
+  getProjectByStatusAndProProfileId,
   getProjectByStatusAndUserId,
   updateProjectStatusAndAsignTo,
   searchProject,
   updateProjectStatusByProjectId,
-  getProjectByStatusAndUserProfileId
+  getProjectByUserProfileId
 };

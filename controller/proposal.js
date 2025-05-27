@@ -160,8 +160,8 @@ const getProposalByStatusAndProProfileId = async (req, res) => {
 
 const getProposalByProjectId = async (req, res) => {
   try {
-    const { projectId } = req.query;
-    const proposal = await func.getProposalByProjectId(projectId);
+    // const { projectId } = req.query;
+    const proposal = await func.getProposalByProjectId(req);
     if (proposal.length == 0) {
       return res.status(200).json({ status: "proposal not found", data :proposal, success: false });
     } else {

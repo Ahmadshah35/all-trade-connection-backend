@@ -100,7 +100,7 @@ const getProfile = async (req, res) => {
           .json({ status: "profile not found", success: false });
       } else {
         const userId= profile._id
-        const projects = await project.getProjectByStatusAndUserProfileId(userId)
+        const projects = await project.getProjectByUserProfileId(userId)
         const projectLength = projects.length
         const userWithoutPassword = await userProfileModel
           .findById(id)
@@ -127,8 +127,8 @@ const getProfile = async (req, res) => {
         const reviews = await reviewFunc.getAllReviewOnProProfile(proProfileId)
         console.log("reviews",reviews)
         const reviewLength= reviews.length
-        const status = "Completed"
-        const getProject = await project.getStatusByProProfileId(proProfileId,status)
+        const status = "Done"
+        const getProject = await project.getProjectByStatusAndProProfileId(proProfileId,status)
         const completedProject = getProject.length
         const userWithoutPassword = await proProfileModel
           .findById(id)

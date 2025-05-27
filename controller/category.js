@@ -12,7 +12,7 @@ const createCategory = async (req, res) => {
       return res
         .status(200)
         .json({ message: "Category already exists", success: false });
-    }
+    }else{
 
     const category = new categoryModel({ adminId, name });
     const result = await category.save();
@@ -20,6 +20,7 @@ const createCategory = async (req, res) => {
     return res
       .status(200)
       .json({ message: "Successfully created", success: true, data: result });
+    }
   } catch (error) {
     console.error("Error:", error);
     return res
@@ -28,10 +29,16 @@ const createCategory = async (req, res) => {
   }
 };
 
-const getAllCategory = async (req, res) => {
+const getCategory = async (req, res) => {
   try {
-    const all = await categoryModel.find();
-    res.status(200).json({ message: "all category", success: true, data: all });
+    const {id} = req.query
+    const all = await categoryModel.findById({_id:id});
+    if(!all){
+      res.status(200).json({ message: "category not found", success: false });
+
+    }else{
+    res.status(200).json({ message: " categories", success: true, data: all });
+    }
   } catch (error) {
     console.log("error", error);
     res
@@ -43,6 +50,29 @@ const getAllCategory = async (req, res) => {
       });
   }
 };
+
+
+const getAllCategory = async (req, res) => {
+  try {
+    const all = await categoryModel.find();
+    if(all.length == 0){
+      res.status(200).json({ message: "category not found", success: false });
+
+    }else{
+    res.status(200).json({ message: "all categories", success: true, data: all });
+    }
+  } catch (error) {
+    console.log("error", error);
+    res
+      .status(400)
+      .json({
+        message: "something went wrong",
+        success: false,
+        error: error.message,
+      });
+  }
+};
+
 
 const deleteCategory = async(req,res)=>{
 try {
@@ -61,5 +91,6 @@ try {
 module.exports = {
   createCategory,
   getAllCategory,
-  deleteCategory
+  deleteCategory,
+  getCategory
 };

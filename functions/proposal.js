@@ -57,8 +57,13 @@ const getProposalByStatusAndProProfileId = async (proProfileId, status) => {
   return proposal;
 };
 
-const getProposalByProjectId = async (projectId) => {
-  const proposal = await proposalModel.find({ projectId: projectId, status:"Pending" }).populate({
+const getProposalByProjectId = async (req) => {
+  const {projectId,status} = req.query
+  const filter = {projectId}
+  if(status){
+    filter.status = status
+  }
+  const proposal = await proposalModel.find(filter).populate({
     path :"proProfileId",
     select:"-password"
   });
