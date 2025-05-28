@@ -40,7 +40,7 @@ const upadateProfile = async (req, res) => {
           status: "failed",
           message: "Invalid profile ID",
           success: false,
-        });
+        });  
       }
 
       const existingProfile = await proFunc.getProProfile(id);
@@ -67,7 +67,7 @@ const upadateProfile = async (req, res) => {
         return res
           .status(200)
           .json({ status: "success", data: userWithoutPassword, success: true });
-      } else {
+      }else {
         return res
           .status(200)
           .json({ status: "failed", message: "Update failed", success: false });

@@ -1,6 +1,47 @@
 const multer = require("multer");
 const path = require("path");
 
+
+const projectStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/project"); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname); 
+  },
+});
+
+const projectUpload = multer({ storage:projectStorage });
+
+
+const ProfileStorage = multer.diskStorage({
+  destination: "./public/profile",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const profileUpload = multer({
+  storage: ProfileStorage,
+});
+
+
+
+
+
+
+
+
+
+
+
+module.exports = { projectUpload, profileUpload };
+
+
+
+
+
+
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
 //     cb(null, "./public/project");
@@ -41,28 +82,3 @@ const path = require("path");
 //   fileFilter,
 //   // limits: { fileSize: 50 * 1024 * 1024 },
 // });
-
-const projectStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/project"); // Set your upload directory
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Rename the file to avoid conflicts
-  },
-});
-
-const projectUpload = multer({ storage:projectStorage });
-
-
-const ProfileStorage = multer.diskStorage({
-  destination: "./public/profile",
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const profileUpload = multer({
-  storage: ProfileStorage,
-});
-
-module.exports = { projectUpload, profileUpload };
