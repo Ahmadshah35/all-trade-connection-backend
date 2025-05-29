@@ -57,7 +57,7 @@ const getProposalByStatusAndProProfileId = async (proProfileId, status) => {
   return proposal;
 };
 
-const getProposalByProjectId = async (req) => {
+const getProposalByProjectIdOrStatus = async (req) => {
   const {projectId,status} = req.query
   const filter = {projectId}
   if(status){
@@ -78,5 +78,5 @@ module.exports = {
   getProposal,
   updateProposalStatus,
   getProposalByStatusAndProProfileId,
-  getProposalByProjectId,
+  getProposalByProjectIdOrStatus,
 };

@@ -32,7 +32,6 @@ router.post("/deleteCategory",categoryController.deleteCategory );
 router.get("/getAllCategory",categoryController.getAllCategory );
 router.get("/getCategory",categoryController.getCategory );
 
-
 // Profile And ProProfile
 router.post( "/updateProfile", profileUpload.fields([{ name: "certificate", maxCount: 4 },{ name : "image" , maxCount: 1 }]), profileController.upadateProfile);
 router.get("/getProfile", profileController.getProfile);
@@ -71,7 +70,7 @@ router.post("/deleteProposal", proposalController.deleteProposal);
 router.post("/updateProposalStatus",proposalController.updateProposalStatus)
 router.get("/getProposal", proposalController.getProposal);
 router.get("/getProposalByStatusAndProProfileId", proposalController.getProposalByStatusAndProProfileId);
-router.get("/getProposalByProjectId", proposalController.getProposalByProjectId);
+router.get("/getProposalByProjectIdOrStatus", proposalController.getProposalByProjectIdOrStatus);
 
 //Admin
 router.post( "/adminSignup", adminController.signUpAdmin);
@@ -80,7 +79,6 @@ router.post("/adminLogin", adminController.loginAdmin);
 //Report
 router.post("/reportedByPro", reportController.reportedByPro);
 router.post("/reportedByUser", reportController.reportedByUser);
-
 
 // Reviews
 router.post("/createReview",reviewController.createReview);

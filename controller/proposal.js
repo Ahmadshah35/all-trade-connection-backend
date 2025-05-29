@@ -158,10 +158,10 @@ const getProposalByStatusAndProProfileId = async (req, res) => {
   }
 };
 
-const getProposalByProjectId = async (req, res) => {
+const getProposalByProjectIdOrStatus = async (req, res) => {
   try {
     // const { projectId } = req.query;
-    const proposal = await func.getProposalByProjectId(req);
+    const proposal = await func.getProposalByProjectIdOrStatus(req);
     if (proposal.length == 0) {
       return res.status(200).json({ status: "proposal not found", data :proposal, success: false });
     } else {
@@ -182,5 +182,5 @@ module.exports = {
   getProposal,
   updateProposalStatus,
   getProposalByStatusAndProProfileId,
-  getProposalByProjectId,
+  getProposalByProjectIdOrStatus,
 };
