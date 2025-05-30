@@ -140,6 +140,7 @@ const SignUpPro = async (decode) => {
     lastName: decode.lastName || null,
     phoneNumber:decode.phoneNumber,
     bio:decode.bio,
+    image: decode.image,
     category:decode.category,
     address:decode.address,
     includingTheseDays:decode.includingTheseDays,

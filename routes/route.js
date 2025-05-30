@@ -11,6 +11,7 @@ const categoryController = require("../controller/category")
 const reviewController = require("../controller/review")
 const reportController = require("../controller/report")
 const supportController= require("../controller/support")
+const notificationController = require("../controller/notification")
 const { profileUpload, upload, projectUpload } = require("../middleware/upload");
 const router = express.Router();
 
@@ -39,7 +40,7 @@ router.get("/getAllProfile", profileController.getAllProfile);
 router.get("/getAllProProfile", proProfileController.getAllProProfile); 
 router.get("/getProCategory", proProfileController.getProCategory);
 router.post("/updateIncludingTheseDays", proProfileController.updateIncludingTheseDays);
-router.get("/getProProfileByLocationAndCategory",proProfileController.getProProfileByLocationAndCategory);
+router.post("/getProProfileByLocationAndCategory",proProfileController.getProProfileByLocationAndCategory);
 
 //Project
 router.post("/createProject", projectUpload.array("images",4),projectController.createProject);
@@ -49,7 +50,7 @@ router.post("/deleteProject", projectController.deleteProject);
 router.get("/getProject", projectController.getProject);
 router.get("/getAllProject", projectController.getAllProject);
 router.get("/getProjectByStatus", projectController.getProjectByStatus);
-router.get("/getProjectByLocationAndCategory",projectController.getProjectByLocationAndCategory);
+router.post("/getProjectByLocationAndCategory",projectController.getProjectByLocationAndCategory);
 router.get("/getProjectByStatusProProfileId",projectController.getProjectByStatusProProfileId );
 router.get("/getProjectByStatusAndUserId",projectController.getProjectByStatusAndUserId );
 
@@ -94,10 +95,10 @@ router.post("/createSupport",supportController.createSupport);
 router.get("/getSupport", supportController.getSupport);
 router.get("/getAllSupport", supportController.getAllSupport);
 
-
-
-
-
+//Notification
+router.get("/getAllNotificationOfUser", notificationController.getAllNotificationOfUser);
+router.get("/getAllNotificationOfProfessional", notificationController.getAllNotificationOfProfessional);
+router.post("/deleteNotification", notificationController.deleteNotification);
 
 
 

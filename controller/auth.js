@@ -26,6 +26,7 @@ const signUp = async (req, res) => {
       startTime,
       endTime,
       certificate,
+      category,
       state,
       city,
       zipCode,
@@ -98,12 +99,14 @@ const signUp = async (req, res) => {
           message: "Email is Already Taken!",
         });
       } else {
+        const images = req.files.image[0].filename;
         const certificates = req.files.certificate.map((file) => file.filename);
         const token = jwt.sign(
           {
             email,
             firstName,
             lastName,
+            image:images,
             phoneNumber,
             address,
             password,
@@ -111,6 +114,7 @@ const signUp = async (req, res) => {
             locationName,
             latitude,
             longitude,
+            category,
             state,
             city,
             zipCode,
@@ -139,12 +143,14 @@ const signUp = async (req, res) => {
             email,
             firstName,
             lastName,
+            image:images,
             phoneNumber,
             address,
             type,
             locationName,
             latitude,
             longitude,
+            category,
             state,
             city,
             zipCode,

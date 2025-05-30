@@ -67,7 +67,7 @@ const getProProfileByProId = async (proId) => {
 };
 
 const getProProfileByLocationAndCategory = async (req) => {
-  const { latitude, longitude, category } = req.query;
+  const { latitude, longitude, category } = req.body;
   // console.log("first",req.query)
   const filter = {};
 
@@ -87,34 +87,27 @@ const getProProfileByLocationAndCategory = async (req) => {
     };
   }
   // console.log("first",filter)
-  const result = await proModel.find(filter).populate({
-    path: "proProfileId",
-    select: "-password",
-  });
-
+  const result = await proModel.find(filter).select("-password")
   return result;
 };
+
 const getProProfiletByLocation = async (req) => {
   const { longitude, latitude } = req.query;
   const filter = {};
 
   if (longitude && latitude) {
-    filter.location = {
+    filter.currentLocation = {
       $near: {
         $geometry: {
           type: "Point",
           coordinates: [parseFloat(longitude), parseFloat(latitude)],
         },
-        $maxDistance: 10000,
+        $maxDistance: 10000, // 10 km
       },
     };
   }
 
-  const result = await proModel.find(filter).populate({
-    path: "proProfileId",
-    select: "-password",
-  });
-
+  const result = await proModel.find(filter).select("-password");
   return result;
 };
 
@@ -148,7 +141,6 @@ const updateIncludingTheseDays = async (id, newDays) => {
   });
   return updatedDoc;
 };
-;
 
 module.exports = {
   updateProProfile,

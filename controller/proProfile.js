@@ -2,7 +2,6 @@ const { default: mongoose } = require("mongoose");
 const func = require("../functions/proProfile");
 const proProfileModel = require("../models/proProfile");
 
-
 const getAllProProfile = async (req, res) => {
   try {
     const profile = await func.getAllProProfile(req);
@@ -55,35 +54,17 @@ const getProCategory = async (req, res) => {
 
 const getProProfileByLocationAndCategory = async (req, res) => {
   try {
-    const { category, latitude, longitude } = req.query;
-    if (category && latitude && longitude) {
       const proProfile = await func.getProProfileByLocationAndCategory(req);
-      if (proProfile) {
-        return res
-          .status(200)
-          .json({ message: "projects", data: proProfile, success: true });
-      }
-    } else if (category) {
-      const categorys = await func.getProCategory(req);
-
-      if (categorys) {
-        return res
-          .status(200)
-          .json({ status: "successful", data: categorys, success: true });
-      } 
-    } else if (latitude && longitude) {
-      const proProfile = await func.getProProfiletByLocation(req);
-      if (proProfile) {
-        return res
-          .status(200)
-          .json({ message: "proProfile", data: proProfile, success: true });
-      }
-    } else {
-      return res.status(200).json({
-        status: "failed",
-        message: "proProfile not found",
-        success: false,
-      });
+      if (proProfile.length == 0) {
+        return res.status(200).json({
+          message: "failed",
+          message: "proProfiles not found",
+          success: false,
+        });
+      }else {
+      return res
+        .status(200)
+        .json({ message: "proProfile", data: proProfile, success: true });
     }
   } catch (error) {
     console.error("Error fetching proProfile:", error);

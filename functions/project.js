@@ -104,7 +104,7 @@ const getStatus = async (status) => {
 };
 
 const getProjectByLocationAndCategory = async (req) => {
-  const { category, longitude, latitude } = req.query;
+  const { category, longitude, latitude } = req.body;
   const filter = {};
 
   if (category) {

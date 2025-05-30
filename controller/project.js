@@ -1,9 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const func = require("../functions/project");
 const profileModel = require("../models/userProfile");
-const proposalFunc= require("../functions/proposal")
- 
-
+const proposalFunc = require("../functions/proposal");
+const notificationFunc = require("../functions/notification");
 const createProject = async (req, res) => {
   try {
     const { userProfileId } = req.body;
@@ -24,7 +23,7 @@ const createProject = async (req, res) => {
     }
 
     const user = await profileModel.findById(userProfileId);
-    if (!user ) {
+    if (!user) {
       res.status(200).json({
         status: "failed",
         message: " user not found",
@@ -35,15 +34,23 @@ const createProject = async (req, res) => {
     const project = await func.createProject(req);
     if (!project) {
       res.status(200).json({
-        status: "failed",  
-        message: "project not saved", 
+        status: "failed",
+        message: "project not saved",
         success: false,
       });
+    }else{
+     const userId = project.userProfileId
+     const projectId = project._id
+     const category = project.category
+     const message =`New Project has been created.`
+     const type = `Project`
+      
+    const notification = await notificationFunc.createNotificationForProjectCreation(userId,projectId,category,type,message)
+
+    return res
+      .status(201)
+      .json({ status: "success", data: project, success: true });
     }
-
-    return res.status(201).json({ status: "success", data: project, success: true });
-
-   
   } catch (error) {
     console.error(" error :", error);
     res
@@ -63,8 +70,8 @@ const updateProject = async (req, res) => {
         success: false,
       });
     }
- 
-    const existingProject = await func.getProject(id); 
+
+    const existingProject = await func.getProject(id);
     if (!existingProject) {
       return res.status(200).json({
         status: "failed",
@@ -81,15 +88,13 @@ const updateProject = async (req, res) => {
         message: "Project not saved",
         success: false,
       });
-    }else{
-
-    return res.status(200).json({
-      status: "success",
-      data: project,
-      success: true,
-    });
-  }
-
+    } else {
+      return res.status(200).json({
+        status: "success",
+        data: project,
+        success: true,
+      });
+    }
   } catch (error) {
     console.error("Error:", error);
     return res.status(400).json({
@@ -106,11 +111,26 @@ const updateStatus = async (req, res) => {
     const project = await func.updateStatus(id, status);
 
     if (project) {
-      return res.status(200).json({ status: "success", data: project, success: true });
- } else {
+       const proId = project.asignTo
+      const projectId = project._id
+      const userId = project.userProfileId
+     const category = project.category
+     const message =`New update on your Proposal! Status : ${project.status}`
+      const type = `Project`
+      
+    const notification = await notificationFunc.createNotificationForProjectStatus(userId,proId,projectId,category,type,message)
+
+      return res
+        .status(200)
+        .json({ status: "success", data: project, success: true });
+    } else {
       return res
         .status(400)
-        .json({ status: "failed", message: "Update status failed", success: false });
+        .json({
+          status: "failed",
+          message: "Update status failed",
+          success: false,
+        });
     }
   } catch (error) {
     console.error("Error updating status:", error);
@@ -135,7 +155,11 @@ const deleteProject = async (req, res) => {
     } else {
       return res
         .status(200)
-        .json({ status: "failed", message: "Delete project failed", success: false });
+        .json({
+          status: "failed",
+          message: "Delete project failed",
+          success: false,
+        });
     }
   } catch (error) {
     console.error("Error deleting project:", error);
@@ -155,7 +179,11 @@ const getProject = async (req, res) => {
     if (!project) {
       return res
         .status(200)
-        .json({ status: "failed", message: "project not found", success: false });
+        .json({
+          status: "failed",
+          message: "project not found",
+          success: false,
+        });
     } else {
       // const proposals = await proposalFunc.getProposalByProjectId(project._id)
       return res
@@ -180,7 +208,11 @@ const getAllProject = async (req, res) => {
     if (projects.length == 0) {
       return res
         .status(200)
-        .json({ status: "failed", message: "project not found", success: false });
+        .json({
+          status: "failed",
+          message: "project not found",
+          success: false,
+        });
     } else {
       return res
         .status(200)
@@ -196,7 +228,6 @@ const getAllProject = async (req, res) => {
     });
   }
 };
-
 
 const getProjectByStatus = async (req, res) => {
   try {
@@ -227,36 +258,17 @@ const getProjectByStatus = async (req, res) => {
 
 const getProjectByLocationAndCategory = async (req, res) => {
   try {
-    const { category, latitude, longitude } = req.query;
-    if (category && latitude && longitude) {
-      const project = await func.getProjectByLocationAndCategory(req);
-      if (project) {
-        return res
-          .status(200)
-          .json({ message: "projects", data: project, success: true });
-      }
-    } else if (category) {
-      
-      const categorys = await func.getProjectCategory(req);
-
-      if (categorys) {
-        return res
-          .status(200)
-          .json({ message: "projects", data: categorys, success: true });
-      } 
-    } else if (latitude && longitude) {
-      const project = await func.getProjectByLocation(req);
-      if (project) {
-        return res
-          .status(200)
-          .json({ message: "projects", data: project, success: true });
-      }
-    } else {
+    const project = await func.getProjectByLocationAndCategory(req);
+    if (project.length == 0) {
       return res.status(200).json({
         status: "failed",
         message: "Project not found",
         success: false,
       });
+    } else {
+      return res
+        .status(200)
+        .json({ message: "projects", data: project, success: true });
     }
   } catch (error) {
     console.error("Error fetching project:", error);
@@ -299,7 +311,10 @@ const getProjectByStatusProProfileId = async (req, res) => {
 const getProjectByStatusAndUserId = async (req, res) => {
   try {
     const { status, userProfileId } = req.query;
-    const project = await func.getProjectByStatusAndUserId(userProfileId, status);
+    const project = await func.getProjectByStatusAndUserId(
+      userProfileId,
+      status
+    );
 
     if (!project) {
       return res.status(200).json({
@@ -316,15 +331,13 @@ const getProjectByStatusAndUserId = async (req, res) => {
   } catch (error) {
     console.error("Error fetching project:", error);
     return res.status(500).json({
-      status: "failed"
-      , success: false,
+      status: "failed",
+      success: false,
       message: "Something went wrong",
       error: error.message,
     });
   }
 };
-
-
 
 module.exports = {
   createProject,

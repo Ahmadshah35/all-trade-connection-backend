@@ -10,6 +10,9 @@ const profileSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    image:{
+    type: String,
+    },
     firstName: {
       type: String,
     },
@@ -26,6 +29,7 @@ const profileSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ["Point"],
+        default: "Point"
       },
       coordinates: {
         type: [Number],
@@ -104,6 +108,7 @@ const profileSchema = new mongoose.Schema(
 
 // profileSchema.set("toObject", { virtuals: true });
 // profileSchema.set("toJSON", { virtuals: true });
+
 profileSchema.index({ currentLocation: "2dsphere" });
 
 const proProfileModel = mongoose.model("proProfile", profileSchema);
