@@ -1,7 +1,7 @@
 const proModel = require("../models/proProfile");
 
 const updateProProfile = async (id, userData, files) => {
-  const existingProfile = await proModel.findById({_id:id});
+  const existingProfile = await proModel.findById(id);
   if (!existingProfile) throw new Error("Profile not found");
 
   const existingCertificates = existingProfile.certificate || [];

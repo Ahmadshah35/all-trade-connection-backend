@@ -81,7 +81,7 @@ const getReview = async (req, res) => {
   try {
     const { id } = req.query;
     const review = await func.getReview({ _id: id });
-    if (review.length == 0) {
+    if (!review) {
       return res
         .status(200)
         .json({ message: "reviews not found", success: false });

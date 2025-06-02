@@ -3,6 +3,7 @@ const func = require("../functions/proposal");
 const proposalModel = require("../models/proposal");
 const projectFunc = require("../functions/project");
 const notificationFunc = require("../functions/notification");
+
 const createProposal = async (req, res) => {
   const { projectId, proProfileId } = req.body;
   const validiate = await proposalModel.findOne({
@@ -97,7 +98,7 @@ const getProposal = async (req, res) => {
   try {
     const { id } = req.query;
     const proposal = await func.getProposal({ _id: id });
-    if (proposal.length == 0) {
+    if (!proposal) {
       return res
         .status(200)
         .json({ status: "incorrect credentials", success: false });

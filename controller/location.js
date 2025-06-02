@@ -96,7 +96,7 @@ const getLocation = async (req, res) => {
   try {
     const { id } = req.query;
     const location = await func.getLocation({ _id: id });
-    if (location.length == 0) {
+    if (!location) {
       return res.status(200).json({
         status: "failed",
         message: "location not found",
