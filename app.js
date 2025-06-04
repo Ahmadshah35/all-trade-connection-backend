@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use("/", express.static(path.resolve(__dirname, "./public/profile")));
 app.use("/", express.static(path.resolve(__dirname, "./public/project")));
-// app.use("/", express.static(path.resolve(__dirname, "./public/proProfile")));
+app.use("/", express.static(path.resolve(__dirname, "./public/document")));
 
 app.use("/api/user", Router);
 
