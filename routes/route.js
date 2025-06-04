@@ -16,7 +16,7 @@ const { profileUpload, upload, projectUpload } = require("../middleware/upload")
 const router = express.Router();
 
 //Auth
-router.post( "/signup", profileUpload.fields([{ name: "certificate", maxCount: 5 }, { name: "image", maxCount: 1 }, ]), userController.signUp);
+router.post( "/signup", upload.fields([{ name: "certificate", maxCount: 5 }, { name: "image", maxCount: 1 }, ]), userController.signUp);
 router.post("/login", userController.login);
 router.post("/deleteUser", userController.deleteUser);
 router.post("/deletePro", userController.deletePro);
@@ -34,7 +34,7 @@ router.get("/getAllCategory",categoryController.getAllCategory );
 router.get("/getCategory",categoryController.getCategory );
 
 // Profile And ProProfile
-router.post( "/updateProfile", profileUpload.fields([{ name: "certificate", maxCount: 4 },{ name : "image" , maxCount: 1 }]), profileController.upadateProfile);
+router.post( "/updateProfile", upload.fields([{ name: "certificate", maxCount: 4 },{ name : "image" , maxCount: 1 }]), profileController.upadateProfile);
 router.get("/getProfile", profileController.getProfile);
 router.get("/getAllProfile", profileController.getAllProfile);
 router.get("/getAllProProfile", proProfileController.getAllProProfile); 

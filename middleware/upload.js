@@ -1,6 +1,6 @@
 const multer = require("multer");
 const path = require("path");
-
+const fs = require("fs")
 
 const projectStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -25,6 +25,34 @@ const profileUpload = multer({
   storage: ProfileStorage,
 });
 
+const imagePath = path.join(__dirname, "../public/profile")
+const documentPath = path.join(__dirname, "../public/document");
+[imagePath, documentPath].forEach(dir =>{
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir, { recursive: true});
+    }
+});
+
+const Storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        if(file.mimetype.startsWith("image/")){
+            cb(null, imagePath);
+            // imagePath
+        } else if(file.mimetype === "application/pdf"){
+            cb(null, documentPath);
+            // documentPath
+        } else {
+            cb( new Error("Invalid File Type!"), false);
+        }
+    },
+    filename: function(req, file, cb){
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
+const upload = multer({
+    storage: Storage,
+    limits: { fileSize: 10 * 1024 * 1024 }
+});
 
 
 
@@ -34,8 +62,7 @@ const profileUpload = multer({
 
 
 
-
-module.exports = { projectUpload, profileUpload };
+module.exports = { projectUpload, profileUpload ,upload };
 
 
 
