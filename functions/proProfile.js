@@ -17,6 +17,32 @@ const updateProProfile = async (id, userData, files) => {
     userData.image = existingProfile.image || null;
   }
 
+   if (userData.includingTheseDays) {
+  // if includingTheseDays is an array of strings, check if first element is a JSON string
+  if (Array.isArray(userData.includingTheseDays) && userData.includingTheseDays.length === 1) {
+    try {
+      const parsed = JSON.parse(userData.includingTheseDays[0]);
+      if (Array.isArray(parsed)) {
+        userData.includingTheseDays = parsed;
+      }
+    } catch (err) {
+      // parsing failed, leave it as is
+    }
+  } else if (typeof userData.includingTheseDays === "string") {
+    // if it's a single string (not in array), try parse it too
+    try {
+      const parsed = JSON.parse(userData.includingTheseDays);
+      if (Array.isArray(parsed)) {
+        userData.includingTheseDays = parsed;
+      }
+    } catch (err) {
+      // parsing failed, leave as is
+    }
+  }
+} else {
+  userData.includingTheseDays = existingProfile.includingTheseDays || [];
+}
+
   const updatedProfile = await proModel.findByIdAndUpdate(
     id,
     { $set: userData },
@@ -25,6 +51,7 @@ const updateProProfile = async (id, userData, files) => {
 
   return updatedProfile;
 };
+
 
 const updateAvgRating = async (id,avgRating) => {
 
