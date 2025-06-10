@@ -151,7 +151,7 @@ const getAverageRating = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(proProfileId)) {
       return res
-        .status(400)
+        .status(200)
         .json({ status: "failed", message: "Invalid profile ID" });
     }
 
@@ -166,8 +166,7 @@ const getAverageRating = async (req, res) => {
       },
     ]);
 
-    const rating =
-      result.length > 0 ? result[0] : { averageRating: 0, totalReviews: 0 };
+    const rating = result.length > 0 ? result[0] : { averageRating: 0, totalReviews: 0 };
       const review = await func.getAllReviewOnProProfile({ proProfileId: proProfileId });
 
     return res.status(200).json({ status: "successful", data: {rating,review} , success: true });
@@ -175,7 +174,7 @@ const getAverageRating = async (req, res) => {
     console.error("Error getting average rating:", error);
     
     return res
-      .status(500)
+      .status(400)
       .json({
         status: "failed",
         success: false,

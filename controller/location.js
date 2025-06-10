@@ -169,7 +169,7 @@ const updateSelectedProfessionalLocation = async (req, res) => {
   try {
     const locations = await func.updateSelectedProfessionalLocation(req);
     if (!locations) {
-      return res.status(404).json({
+      return res.status(200).json({
         success: false,
         message: "Location not found ",
       });
@@ -183,7 +183,7 @@ const updateSelectedProfessionalLocation = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating selected location:", error.message);
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: "Internal server error",
       error: error.message,
@@ -196,7 +196,7 @@ const updateSelectedUserLocation = async (req, res) => {
   try {
     const locations = await func.updateSelectedUserLocation(req);
     if (!locations) {
-      return res.status(404).json({
+      return res.status(200).json({
         success: false,
         message: "Location not found ",
       });
@@ -210,7 +210,7 @@ const updateSelectedUserLocation = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating selected location:", error.message);
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: "Internal server error",
       error: error.message,
