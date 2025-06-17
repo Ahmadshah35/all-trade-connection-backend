@@ -172,13 +172,13 @@ const verify = async (req, res) => {
   try {
     const verify = await func.verifyOtp(req, session);
     if (verify) {
-      res.status(200).json({
+     return res.status(200).json({
         message: "sucessfully verify",
         success: true,
         data: verify,
       });
 
-      return;
+      
     } else {
       res.status(200).json({ message: "invalid Otp", success: false });
     }

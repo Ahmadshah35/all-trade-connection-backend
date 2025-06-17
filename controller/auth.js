@@ -254,7 +254,7 @@ const login = async (req, res) => {
     }
   } catch (error) {
     console.error("login failed:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       message: "Something went wrong",
       success: false,
       error: error.message,
@@ -317,7 +317,7 @@ const setNewPassword = async (req, res) => {
       });
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(400).json({
       message: "something went wrong",
       success: false,
       error: error.message,

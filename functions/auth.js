@@ -47,9 +47,6 @@ const validiatelUserById = async (id) => {
   return user;
 };
 
-
-
-
 const getUser = async (req) => {
   const { email } = req.body;
   const user = await userProfile.findOne({ email: email });
