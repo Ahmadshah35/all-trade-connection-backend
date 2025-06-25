@@ -28,8 +28,7 @@ const profileSchema = new mongoose.Schema(
     currentLocation: {
       type: {
         type: String,
-        enum: ["Point"],
-        default: "Point"
+        enum: ["Point"]
       },
       coordinates: {
         type: [Number],
@@ -53,26 +52,32 @@ const profileSchema = new mongoose.Schema(
     },
     state:{
       type: String,
-      required: true,
     },
     city: {
       type: String,
-      required: true,
     },
     zipCode: {
       type: Number,
-      required: true,
     },
-    includingTheseDays: {
-      type: [String],
-      enum: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    startTime: {
-      type: String,
-    },
-    endTime: {
-      type: String,
-    },
+    workingDays: [
+      {
+        day: {
+          type: String,
+          enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        },
+        startTime: {
+          type: String,
+        },
+        endTime: {
+          type: String,
+        },
+        isActive: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+
     certificate: {
       type: [String],
     },

@@ -13,14 +13,24 @@ const createLocation = async (req, res) => {
 
       if (userProfileId) {
         const created = await userFunc.profileCreated(userProfileId);
+        const locations= req.body
+        const selected = await func.addUserLocation(locations);
         return res
           .status(200)
-          .json({ status: "sucess", data: {location, profileCreated: created.profileCreated}, success: true });
+          .json({  data: [location], success: true });
       } else if (proProfileId) {
+          // console.log("first",req.body)
+        
         const created = await proFunc.proProfileCreated(proProfileId);
+          // console.log("first",created)
+          // return
+        const  locations = req.body
+        // console.log("first",locations)
+     
+        const selected = await func.addProfessionalLocation(locations);
         return res
           .status(200)
-          .json({ status: "sucess", data:{ location , profileCreated: created.profileCreated}, success: true });
+          .json({  data:[ location ], success: true });
       } else {
         return res
           .status(200)
@@ -28,21 +38,19 @@ const createLocation = async (req, res) => {
       }
     } else {
       return res.status(200).json({
-        status: "failed",
         message: "data isn't saved in Database",
         success: false,
       });
     }
   } catch (error) {
-    console.error("createLocation failed:", error);
-    return res.status(500).json({
+    console.error(" failed:", error);
+    return res.status(400).json({
       message: "Something went wrong",
       error: error.message,
       success: false,
     });
   }
 };
-
 const upadateLocation = async (req, res) => {
   try {
     const { id } = req.body;
@@ -59,7 +67,7 @@ const upadateLocation = async (req, res) => {
     }
   } catch (error) {
     console.error("error :", error);
-    return res.status(500).json({
+    return res.status(400).json({
       message: "Something went wrong",
       error: error.message,
       success: false,
@@ -84,7 +92,7 @@ const deleteLocation = async (req, res) => {
     }
   } catch (error) {
     console.error("Something went wrong", error);
-    return res.status(500).json({
+    return res.status(400).json({
       message: "Something went wrong",
       error: error.message,
       success: false,
@@ -157,7 +165,7 @@ const getLocationByProProfileId = async (req, res) => {
     }
   } catch (error) {
     console.error("Error in get location:", error.message);
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: "Internal server error",
       error: error.message,

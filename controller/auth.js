@@ -9,28 +9,7 @@ const locationModel = require("../models/location");
 
 const signUp = async (req, res) => {
   try {
-    const {
-      email,
-      firstName,
-      lastName,
-      phoneNumber,
-      address,
-      password,
-      type,
-      image,
-      locationName,
-      latitude,
-      longitude,
-      bio,
-      includingTheseDays,
-      startTime,
-      endTime,
-      certificate,
-      category,
-      state,
-      city,
-      zipCode,
-    } = req.body;
+    const { type, email, password } = req.body;
     if (type === "User") {
       const validate = await func.validiateEmailUser(req);
       if (validate) {
@@ -39,24 +18,8 @@ const signUp = async (req, res) => {
           message: "Email is Already Taken!",
         });
       } else {
-        const images = req.files.image[0].filename;
         const token = jwt.sign(
-          {
-            email,
-            firstName,
-            lastName,
-            image: images,
-            phoneNumber,
-            address,
-            password,
-            type,
-            locationName,
-            latitude,
-            longitude,
-            state,
-            city,
-            zipCode,
-          },
+          { email, password, type },
           process.env.JWT_SECRET_TOKEN,
           { expiresIn: "1y" }
         );
@@ -72,22 +35,7 @@ const signUp = async (req, res) => {
         return res.status(200).json({
           success: true,
           message: "Otp sent Successfully!",
-          data: {
-            email,
-            firstName,
-            lastName,
-            image: images,
-            phoneNumber,
-            address,
-            type,
-            locationName,
-            latitude,
-            longitude,
-            state,
-            city,
-            zipCode,
-            otp: createOtp.otp,
-          },
+          data: { email, type, otp: createOtp.otp },
           accessToken: token,
         });
       }
@@ -99,31 +47,8 @@ const signUp = async (req, res) => {
           message: "Email is Already Taken!",
         });
       } else {
-        const images = req.files.image[0].filename;
-        const certificates = req.files.certificate.map((file) => file.filename);
         const token = jwt.sign(
-          {
-            email,
-            firstName,
-            lastName,
-            image:images,
-            phoneNumber,
-            address,
-            password,
-            type,
-            locationName,
-            latitude,
-            longitude,
-            category,
-            state,
-            city,
-            zipCode,
-            bio,
-            includingTheseDays,
-            startTime,
-            endTime,
-            certificate: certificates,
-          },
+          { email, password, type },
           process.env.JWT_SECRET_TOKEN,
           { expiresIn: "1y" }
         );
@@ -139,28 +64,7 @@ const signUp = async (req, res) => {
         return res.status(200).json({
           success: true,
           message: "Otp sent Successfully!",
-          data: {
-            email,
-            firstName,
-            lastName,
-            image:images,
-            phoneNumber,
-            address,
-            type,
-            locationName,
-            latitude,
-            longitude,
-            category,
-            state,
-            city,
-            zipCode,
-            bio,
-            includingTheseDays,
-            startTime,
-            endTime,
-            certificate: certificates,
-            otp: createOtp.otp,
-          },
+          data: { email, type, otp: createOtp.otp },
           accessToken: token,
         });
       }
@@ -172,7 +76,7 @@ const signUp = async (req, res) => {
     }
   } catch (error) {
     console.log("Having Errors:", error);
-    return res.status(403).json({
+    return res.status(400).json({
       success: false,
       message: "Having Errors",
       error: error.message,

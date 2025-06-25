@@ -15,7 +15,7 @@ const upadateProfile = async (req, res) => {
       const profile = await func.updateProfile(req, id, userData);
       // console.log(profile)
       if (profile) {
-        // const created = await func.profileCreated(id)
+        const created = await func.profileCreated(id)
         const userWithoutPassword = await userProfileModel
           .findById(id)
           .select("-password")
@@ -59,7 +59,7 @@ const upadateProfile = async (req, res) => {
       );
 
       if (profile) {
-        // const created = await func.proProfileCreated(id);
+        const created = await proFunc.proProfileCreated(id);
         const userWithoutPassword = await proProfileModel
           .findById(id)
           .select("-password")
@@ -132,7 +132,7 @@ const getProfile = async (req, res) => {
         const completedProject = getProject.length
         const userWithoutPassword = await proProfileModel
           .findById(id)
-          .select("-password")
+          .select("-password").populate("category")
           .lean();
         return res.status(200).json({
           status: "successful",

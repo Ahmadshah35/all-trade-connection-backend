@@ -117,9 +117,36 @@ const updateIncludingTheseDays = async (req, res) => {
   }
 };
 
+const updateProfessionalIsActive = async (req, res) => {
+  try {
+    const { workingDayId, isActive } = req.body;
+
+    const day = await proProfileModel.findOneAndUpdate(
+      { "workingDays._id": workingDayId },
+      { $set: { "workingDays.$.isActive": isActive } },
+      { new: true }
+    );
+
+    if (!day) {
+      return res.status(200).json({ success: false, message: "workingDay not found" });
+    }else{
+
+    return res.status(200).json({
+      success: true,
+      message: "workingDay updated",
+      data: day
+    });
+  }
+  } catch (error) {
+    console.error("error:", error);
+    res.status(400).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
 module.exports = {
   getProCategory,
   getAllProProfile,
   getProProfileByLocationAndCategory,
   updateIncludingTheseDays,
+  updateProfessionalIsActive
 };

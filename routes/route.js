@@ -16,7 +16,7 @@ const { profileUpload, upload, projectUpload } = require("../middleware/upload")
 const router = express.Router();
 
 //Auth
-router.post( "/signup", upload.fields([{ name: "certificate", maxCount: 5 }, { name: "image", maxCount: 1 }, ]), userController.signUp);
+router.post( "/signUp", userController.signUp);
 router.post("/login", userController.login);
 router.post("/deleteUser", userController.deleteUser);
 router.post("/deletePro", userController.deletePro);
@@ -41,6 +41,7 @@ router.get("/getAllProProfile", proProfileController.getAllProProfile);
 router.get("/getProCategory", proProfileController.getProCategory);
 router.post("/updateIncludingTheseDays", proProfileController.updateIncludingTheseDays);
 router.post("/getProProfileByLocationAndCategory",proProfileController.getProProfileByLocationAndCategory);
+router.post("/updateProfessionalIsActive",proProfileController.updateProfessionalIsActive);
 
 //Project
 router.post("/createProject", projectUpload.array("images",4),projectController.createProject);

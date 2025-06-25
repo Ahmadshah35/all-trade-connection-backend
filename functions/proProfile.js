@@ -17,30 +17,33 @@ const updateProProfile = async (id, userData, files) => {
     userData.image = existingProfile.image || null;
   }
 
-   if (userData.includingTheseDays) {
+   if (userData.workingDays) {
   // if includingTheseDays is an array of strings, check if first element is a JSON string
-  if (Array.isArray(userData.includingTheseDays) && userData.includingTheseDays.length === 1) {
+  if (Array.isArray(userData.workingDays) && userData.workingDays.length === 1) {
     try {
-      const parsed = JSON.parse(userData.includingTheseDays[0]);
+      const parsed = JSON.parse(userData.workingDays[0]);
       if (Array.isArray(parsed)) {
-        userData.includingTheseDays = parsed;
+        userData.workingDays = parsed;
       }
     } catch (err) {
       // parsing failed, leave it as is
     }
-  } else if (typeof userData.includingTheseDays === "string") {
+  } else if (typeof userData.workingDays === "string") {
     // if it's a single string (not in array), try parse it too
     try {
-      const parsed = JSON.parse(userData.includingTheseDays);
+      const parsed = JSON.parse(userData.workingDays);
       if (Array.isArray(parsed)) {
-        userData.includingTheseDays = parsed;
+        userData.workingDays = parsed;
       }
     } catch (err) {
       // parsing failed, leave as is
     }
   }
 } else {
-  userData.includingTheseDays = existingProfile.includingTheseDays || [];
+  userData.workingDays = existingProfile.workingDays || [];
+}
+if(userData.category){
+  userData.category =JSON.parse(userData.category)
 }
 
   const updatedProfile = await proModel.findByIdAndUpdate(

@@ -6,31 +6,10 @@ const otpModel = require("../models/otp");
 const proProfileModel = require("../models/proProfile");
 
 const signUpUser = async (decode) => {
-  decode.currentLocation = {
-    type: "Point",
-    coordinates: [
-      parseFloat(decode.longitude),
-      parseFloat(decode.latitude),
-    ],
-    locationName: decode.locationName,
-  };
   const hashPassword = await bcrypt.hash(decode.password, 10);
   const user = new userProfile({
     email: decode.email,
     password: hashPassword,
-    firstName: decode.firstName,
-    lastName: decode.lastName || null,
-    image: decode.image,
-    phoneNumber:decode.phoneNumber,
-    address:decode.address,
-    longitude:decode.longitude,
-    latitude:decode.latitude,
-    locationName:decode.locationName,
-    currentLocation:decode.currentLocation,
-    state:decode.state,
-    city:decode.city,
-    zipCode:decode.zipCode
-
   });
   const result = await user.save();
   return result;
@@ -121,38 +100,11 @@ const deleteUser = async (req) => {
 };
 
 const SignUpPro = async (decode) => {
-  decode.currentLocation = {
-    type: "Point",
-    coordinates: [
-      parseFloat(decode.longitude),
-      parseFloat(decode.latitude),
-    ],
-    locationName: decode.locationName,
-  };
   const hashPassword = await bcrypt.hash(decode.password, 10);
   const pro = new proProfileModel({
     email: decode.email,
     password: hashPassword,
-    firstName: decode.firstName,
-    lastName: decode.lastName || null,
-    phoneNumber:decode.phoneNumber,
-    bio:decode.bio,
-    image: decode.image,
-    category:decode.category,
-    address:decode.address,
-    includingTheseDays:decode.includingTheseDays,
-    startTime:decode.startTime,
-    endTime:decode.endTime,
-    certificate:decode.certificate,
-    longitude:decode.longitude,
-    latitude:decode.latitude,
-    locationName:decode.locationName,
-    currentLocation:decode.currentLocation,
-    state: decode.state,
-    city: decode.city,
-    zipCode: decode.zipCode,
     
-
   });
   const result = await pro.save();
   return result;

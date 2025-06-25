@@ -90,7 +90,7 @@ const addProfessionalLocation = async (locations) => {
   const location = {
     type: "Point",
     coordinates: [parseFloat(longitude), parseFloat(latitude)],
-    name: locationName,
+    locationName: locationName,
   };
 
   const profile = await proProfileModel
@@ -132,7 +132,7 @@ const addUserLocation = async (locations) => {
   const location = {
     type: "Point",
     coordinates: [parseFloat(longitude), parseFloat(latitude)],
-    name: locationName,
+    locationName: locationName,
   };
 
   const profile = await userProfileModel
