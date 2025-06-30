@@ -1,9 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const userFunc = require("../functions/profile");
 const proFunc = require("../functions/proProfile");
-
 const func = require("../functions/location");
 const locationModel = require("../models/location");
+ 
 const createLocation = async (req, res) => {
   try {
     const location = await func.createLocation(req);
@@ -173,6 +173,31 @@ const getLocationByProProfileId = async (req, res) => {
   }
 };
 
+const getLocationByUserProfileId = async (req, res) => {
+  try {
+    const { userProfileId } = req.query;
+    const location = await func.getLocationByUserProfileId(userProfileId);
+    if (location.length == 0) {
+      return res.status(200).json({
+        status: "failed",
+        message: "location not found",
+        success: false,
+      });
+    } else {
+      return res
+        .status(200)
+        .json({ status: "sucessful", data: location, success: true });
+    }
+  } catch (error) {
+    console.error("Error in get location:", error.message);
+    return res.status(400).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 const updateSelectedProfessionalLocation = async (req, res) => {
   try {
     const locations = await func.updateSelectedProfessionalLocation(req);
@@ -198,7 +223,6 @@ const updateSelectedProfessionalLocation = async (req, res) => {
     });
   }
 };
-
 
 const updateSelectedUserLocation = async (req, res) => {
   try {
@@ -234,5 +258,6 @@ module.exports = {
   getAllLocation,
   updateSelectedProfessionalLocation,
   getLocationByProProfileId,
-  updateSelectedUserLocation
+  updateSelectedUserLocation,
+  getLocationByUserProfileId
 };

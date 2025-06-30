@@ -80,7 +80,7 @@ const getLocationByProProfileId = async (proProfileId) => {
   return location;
 };
 
-const getLocationByuserProfileId = async (userProfileId) => {
+const getLocationByUserProfileId = async (userProfileId) => {
   const location = await locationModel.find({ userProfileId: userProfileId });
   return location;
 };
@@ -175,7 +175,7 @@ module.exports = {
   getLocation,
   getAllLocation,
   getLocationByProProfileId,
-  getLocationByuserProfileId,
+  getLocationByUserProfileId,
   addProfessionalLocation,
   updateSelectedProfessionalLocation,
   addUserLocation,

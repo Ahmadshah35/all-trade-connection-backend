@@ -18,7 +18,7 @@ const reviewSchema =new  mongoose.Schema({
     type:Number,
     enum:[0,1,2,3,4,5]
   }
-})
+},{timestamps:true})
 
 const reviewModel =  mongoose.model("review", reviewSchema)
 
