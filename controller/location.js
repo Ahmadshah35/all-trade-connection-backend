@@ -54,6 +54,7 @@ const createLocation = async (req, res) => {
     });
   }
 };
+
 const upadateLocation = async (req, res) => {
   try {
     const { id } = req.body;

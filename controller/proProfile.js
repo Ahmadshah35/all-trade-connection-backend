@@ -119,27 +119,40 @@ const updateIncludingTheseDays = async (req, res) => {
 
 const updateProfessionalIsActive = async (req, res) => {
   try {
-    const { workingDayId, isActive } = req.body;
+    const { workingDayId, isActive, startTime, endTime } = req.body;
 
     const day = await proProfileModel.findOneAndUpdate(
       { "workingDays._id": workingDayId },
-      { $set: { "workingDays.$.isActive": isActive } },
+      {
+        $set: {
+          "workingDays.$.isActive": isActive,
+          "workingDays.$.startTime": startTime,
+          "workingDays.$.endTime": endTime,
+        },
+      },
       { new: true }
-    );
+    ).select("-password");
 
     if (!day) {
-      return res.status(200).json({ success: false, message: "workingDay not found" });
-    }else{
+      return res.status(200).json({
+        success: false,
+        message: "Working day not found",
+      });
+    }
 
     return res.status(200).json({
       success: true,
-      message: "workingDay updated",
-      data: day
+      message: "Working day updated successfully",
+      data: day,
     });
-  }
+
   } catch (error) {
-    console.error("error:", error);
-    res.status(400).json({ success: false, message: "Server Error", error: error.message });
+    console.error("Error updating working day:", error);
+    return res.status(400).json({
+      success: false,
+      message: "Server error while updating working day",
+      error: error.message,
+    });
   }
 };
 
