@@ -37,7 +37,7 @@ const createLocation = async (req, res) => {
       } else {
         return res
           .status(200)
-          .json({ message: "profile id required", success: false });
+          .json({ message: "Missing profile Id", success: false });
       }
     } else {
       return res.status(200).json({
@@ -127,33 +127,11 @@ const getLocation = async (req, res) => {
   }
 };
 
-const getAllLocation = async (req, res) => {
+const getLocationByProfileId = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const location = await func.getAllLocation({ userId: userId });
-    if (location.length == 0) {
-      return res.status(200).json({
-        status: "failed",
-        message: "location not found",
-        success: false,
-      });
-    } else {
-      return res
-        .status(200)
-        .json({ status: "sucessful", data: location, success: true });
-    }
-  } catch (error) {
-    return res.status(400).json({
-      status: "failed",
-      message: "something went wrong",
-      success: false,
-    });
-  }
-};
+    const {userProfileId, proProfileId } = req.query;
 
-const getLocationByProProfileId = async (req, res) => {
-  try {
-    const { proProfileId } = req.query;
+    if (proProfileId){
     const location = await func.getLocationByProProfileId(proProfileId);
     if (location.length == 0) {
       return res.status(200).json({
@@ -166,19 +144,8 @@ const getLocationByProProfileId = async (req, res) => {
         .status(200)
         .json({ status: "sucessful", data: location, success: true });
     }
-  } catch (error) {
-    console.error("Error in get location:", error.message);
-    return res.status(400).json({
-      success: false,
-      message: "Internal server error",
-      error: error.message,
-    });
   }
-};
-
-const getLocationByUserProfileId = async (req, res) => {
-  try {
-    const { userProfileId } = req.query;
+  if(userProfileId){
     const location = await func.getLocationByUserProfileId(userProfileId);
     if (location.length == 0) {
       return res.status(200).json({
@@ -191,6 +158,7 @@ const getLocationByUserProfileId = async (req, res) => {
         .status(200)
         .json({ status: "sucessful", data: location, success: true });
     }
+  }
   } catch (error) {
     console.error("Error in get location:", error.message);
     return res.status(400).json({
@@ -261,8 +229,6 @@ module.exports = {
   upadateLocation,
   deleteLocation,
   getLocation,
-  getAllLocation,
-  getLocationByProProfileId,
-  getLocationByUserProfileId,
+  getLocationByProfileId,
   updateSelectedLocation,
 };

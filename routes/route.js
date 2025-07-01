@@ -60,9 +60,7 @@ router.post("/createLocation", locationController.createLocation);
 router.post("/updateLocation", locationController.upadateLocation);
 router.post("/deleteLocation", locationController.deleteLocation);
 router.get("/getLocation", locationController.getLocation);
-router.get("/getAllLocation", locationController.getAllLocation);
-router.get("/getLocationByProProfileId", locationController.getLocationByProProfileId);
-router.get("/getLocationByUserProfileId", locationController.getLocationByUserProfileId);
+router.get("/getLocationByProfileId", locationController.getLocationByProfileId);
 router.post("/updateSelectedLocation", locationController.updateSelectedLocation);
 
 //Proposal
