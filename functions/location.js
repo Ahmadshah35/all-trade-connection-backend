@@ -109,8 +109,7 @@ const addProfessionalLocation = async (locations) => {
   return profile;
 };
 
-const updateSelectedProfessionalLocation = async (req) => {
-  const { locationId, proProfileId } = req.body;
+const updateSelectedProfessionalLocation = async (locationId,proProfileId) => {
 
   const locations = await locationModel.findOne({
     _id: locationId,
@@ -151,8 +150,7 @@ const addUserLocation = async (locations) => {
   return profile;
 };
 
-const updateSelectedUserLocation = async (req) => {
-  const { locationId, userProfileId } = req.body;
+const updateSelectedUserLocation = async (locationId, userProfileId) => {
 
   const locations = await locationModel.findOne({
     _id: locationId,

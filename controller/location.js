@@ -3,7 +3,7 @@ const userFunc = require("../functions/profile");
 const proFunc = require("../functions/proProfile");
 const func = require("../functions/location");
 const locationModel = require("../models/location");
- 
+
 const createLocation = async (req, res) => {
   try {
     const location = await func.createLocation(req);
@@ -12,25 +12,28 @@ const createLocation = async (req, res) => {
       const proProfileId = location.proProfileId;
 
       if (userProfileId) {
+        const update = await func.updateSelectedUserLocation(
+          location._id,
+          userProfileId
+        );
         const created = await userFunc.profileCreated(userProfileId);
-        const locations= req.body
+        const locations = req.body;
         const selected = await func.addUserLocation(locations);
-        return res
-          .status(200)
-          .json({  data: [location], success: true });
+        return res.status(200).json({ data: [location], success: true });
       } else if (proProfileId) {
-          // console.log("first",req.body)
-        
+        // console.log("first",req.body)
+        const update = await func.updateSelectedProfessionalLocation(
+          location._id,
+          proProfileId
+        );
         const created = await proFunc.proProfileCreated(proProfileId);
-          // console.log("first",created)
-          // return
-        const  locations = req.body
+        // console.log("first",created)
+        // return
+        const locations = req.body;
         // console.log("first",locations)
-     
+
         const selected = await func.addProfessionalLocation(locations);
-        return res
-          .status(200)
-          .json({  data:[ location ], success: true });
+        return res.status(200).json({ data: [location], success: true });
       } else {
         return res
           .status(200)
@@ -198,48 +201,51 @@ const getLocationByUserProfileId = async (req, res) => {
   }
 };
 
-const updateSelectedProfessionalLocation = async (req, res) => {
+const updateSelectedLocation = async (req, res) => {
   try {
-    const locations = await func.updateSelectedProfessionalLocation(req);
-    if (!locations) {
+    const { type, locationId, proProfileId, userProfileId } = req.body;
+    if (type == "User") {
+      const locations = await func.updateSelectedUserLocation(
+        locationId,
+        userProfileId
+      );
+      if (!locations) {
+        return res.status(200).json({
+          success: false,
+          message: "Location not found ",
+        });
+      }
+      const updateProfile = await func.addUserLocation(locations);
+      return res.status(200).json({
+        success: true,
+        message: " location updated successfully",
+        data: locations,
+        profileData: updateProfile,
+      });
+    } else if (type == "Professional") {
+      const locations = await func.updateSelectedProfessionalLocation(
+        locationId,
+        proProfileId
+      );
+      if (!locations) {
+        return res.status(200).json({
+          success: false,
+          message: "Location not found ",
+        });
+      }
+      const updateProfile = await func.addProfessionalLocation(locations);
+      return res.status(200).json({
+        success: true,
+        message: " location updated successfully",
+        data: locations,
+        profileData: updateProfile,
+      });
+    } else {
       return res.status(200).json({
         success: false,
-        message: "Location not found ",
+        message: "invalid type",
       });
     }
-    const updateProfile = await func.addProfessionalLocation(locations);
-    return res.status(200).json({
-      success: true,
-      message: " location updated successfully",
-      data: locations,
-      profileData: updateProfile,
-    });
-  } catch (error) {
-    console.error("Error updating selected location:", error.message);
-    return res.status(400).json({
-      success: false,
-      message: "Internal server error",
-      error: error.message,
-    });
-  }
-};
-
-const updateSelectedUserLocation = async (req, res) => {
-  try {
-    const locations = await func.updateSelectedUserLocation(req);
-    if (!locations) {
-      return res.status(200).json({
-        success: false,
-        message: "Location not found ",
-      });
-    }
-    const updateProfile = await func.addUserLocation(locations);
-    return res.status(200).json({
-      success: true,
-      message: " location updated successfully",
-      data: locations,
-      profileData: updateProfile,
-    });
   } catch (error) {
     console.error("Error updating selected location:", error.message);
     return res.status(400).json({
@@ -256,8 +262,7 @@ module.exports = {
   deleteLocation,
   getLocation,
   getAllLocation,
-  updateSelectedProfessionalLocation,
   getLocationByProProfileId,
-  updateSelectedUserLocation,
-  getLocationByUserProfileId
+  getLocationByUserProfileId,
+  updateSelectedLocation,
 };
