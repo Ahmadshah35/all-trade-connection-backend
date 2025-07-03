@@ -8,6 +8,9 @@ const project= require("../functions/project")
 
 const upadateProfile = async (req, res) => {
   try {
+    // const workingDays = JSON.parse(req.body.category)
+    console.log("data :", req.body);
+    // return
     const { id, type } = req.body;
     const userData = req.body;
     if (type == "User") {
