@@ -46,6 +46,14 @@ const createLocationByOtp = async (decode,userProfileId = null ,proProfileId = n
 };
 
 const updateLocation = async (id, userData) => {
+    userData.location = {
+    type: "Point",
+    coordinates: [
+      parseFloat(userData.longitude),
+      parseFloat(userData.latitude),
+    ],
+    locationName: userData.locationName,
+  };
   const location = await locationModel.findByIdAndUpdate(
     id,
     { $set: userData },
