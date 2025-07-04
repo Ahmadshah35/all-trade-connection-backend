@@ -3,14 +3,16 @@ const proModel = require("../models/proProfile");
 const updateProProfile = async (id, userData, files) => {
   const existingProfile = await proModel.findById(id);
   if (!existingProfile) throw new Error("Profile not found");
-
+if(files?.certificate?.length){
   const existingCertificates = existingProfile.certificate || [];
   const newCertificateNames = files?.certificate?.map(file => file.filename) || [];
 
   const retainedCertificates = existingCertificates.filter(file => newCertificateNames.includes(file));
   const addedCertificates = newCertificateNames.filter(file => !existingCertificates.includes(file));
   userData.certificate = [...retainedCertificates, ...addedCertificates];
-
+}else{
+  userData.certificate = existingProfile.certificate
+}
   if (files?.image?.length) {
     userData.image = files.image[0].filename;
   } else {

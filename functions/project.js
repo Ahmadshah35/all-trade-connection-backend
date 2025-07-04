@@ -25,18 +25,18 @@ const updateProject = async (id, userData, files) => {
 
   const existingProject = await projectModel.findById(id);
 
-  if (files?.images?.length) {
-    const existingImages = existingProject.images || [];
-    const newImageNames = files.images.map((file) => file.filename);
+ if (files?.images?.length) {
+  const existingImages = existingProject.images || [];
+  const newImageNames = files.images.map(file => file.filename);
 
-    const retainedImages = existingImages.filter((img) => newImageNames.includes(img));
+  const retainedImages = existingImages.filter(img => newImageNames.includes(img));
 
-    const addedImages = newImageNames.filter((img) => !existingImages.includes(img));
+  const addedImages = newImageNames.filter(img => !existingImages.includes(img));
 
-    userData.image = [...retainedImages, ...addedImages];
-  } else {
-    userData.image = [];
-  }
+  userData.images = [...retainedImages, ...addedImages];
+} else {
+  userData.images = existingProject.images;
+}
 
   const result = await projectModel.findByIdAndUpdate(
     id,
