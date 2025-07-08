@@ -14,7 +14,7 @@ const createProposal = async (req, res) => {
     if (validiate) {
       return res
         .status(200)
-        .json({ status: "proposal already exist", success: true });
+        .json({ message: "proposal already exist", success: false });
     } else {
       const proposal = await func.createProposal(req);
 
@@ -44,7 +44,7 @@ const createProposal = async (req, res) => {
   } catch (error) {
     console.error("Transaction failed:", error);
     return res
-      .status(500)
+      .status(400)
       .json({ message: "Something went wrong", error: error.message });
   }
 };
