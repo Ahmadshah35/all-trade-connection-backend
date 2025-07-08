@@ -99,11 +99,13 @@ const getReview = async (req, res) => {
   }
 };
 
-const getAllReview = async (req, res) => {
+ 
+const getAllReviewByProfileId = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const review = await func.getAllReview({ userId: userId });
-    if (review.length == 0) {
+    const { _id ,type } = req.user;
+    if(type == "User"){
+       const review = await func.getAllReview({ userId: _id });
+    if (review.length == 0 || !review) {
       return res
         .status(200)
         .json({ message: "reviews not found", success: false });
@@ -112,35 +114,27 @@ const getAllReview = async (req, res) => {
         .status(200)
         .json({ message: "sucessful", data: review, success: true });
     }
-  } catch (error) {
-    return res.status(400).json({
-      status: "failed",
-      message: "something went wrong",
-      success: false,
-    });
-  }
-};
-
- 
-const getAllReviewOnProProfile = async (req, res) => {
-  try {
-    const { proProfileId } = req.query;
-    const review = await func.getAllReviewOnProProfile({ proProfileId: proProfileId });
-    if (!review) {
+    }
+    if(type == "Professional"){
+    const review = await func.getAllReviewOnProProfile( _id);
+    if (!review || review.length == 0) {
       return res
         .status(200)
         .json({ message: "reviews not found", success: false });
       } else {
-        const avdRating = await func.avgRating(proProfileId)
+        const avdRating = await func.avgRating(_id)
         return res
           .status(200)
           .json({ message: "sucessful", data: {...review, avdRating}, success: true });
       }
+    }
   } catch (error) {
+    console.log("error", error)
     return res.status(400).json({
       status: "failed",
       message: "something went wrong",
       success: false,
+      error : error.message
     });
   }
 };
@@ -190,7 +184,6 @@ module.exports = {
   updateReview,
   deleteReview,
   getReview,
-  getAllReview,
   getAverageRating,
-  getAllReviewOnProProfile
+  getAllReviewByProfileId
 };

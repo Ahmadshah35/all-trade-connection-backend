@@ -173,12 +173,13 @@ const updateProposalStatus = async (req, res) => {
 
 const getProposalByStatusAndProProfileId = async (req, res) => {
   try {
-    const { proProfileId, status } = req.query;
+    const {_id} = req.user
+    const { status } = req.query;
     const proposal = await func.getProposalByStatusAndProProfileId(
-      proProfileId,
+      _id,
       status
     );
-    if (proposal.length == 0) {
+    if (!proposal || proposal.length == 0) {
       return res
         .status(200)
         .json({ status: "proposal not found", data: proposal, success: false });

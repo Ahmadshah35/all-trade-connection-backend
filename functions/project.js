@@ -58,8 +58,7 @@ const getProject = async (id) => {
   return project;
 };
 
-const getAllProject = async (req) => {
-  const { userProfileId } = req.query;
+const getAllProject = async (userProfileId) => {
   const projects = await projectModel.find({
     userProfileId: userProfileId,
     isDeleted: false,
@@ -167,7 +166,7 @@ const getProjectByStatusAndProProfileId = async (asignTo, status) => {
     path: "asignTo",
     select: "-password",
   }).populate({
-    path:"userId",
+    path:"userProfileId",
     select:"-password"
   });
   return project;
@@ -179,7 +178,7 @@ const getProjectByStatusAndUserId = async (userProfileId, status) => {
     status: status,
     isDeleted: false,
   }).populate({
-    path: "userId",
+    path: "userProfileId",
     select: "-password",
   }).populate({
     path:"asignTo",
@@ -191,7 +190,7 @@ const getProjectByStatusAndUserId = async (userProfileId, status) => {
 
 const getProjectByUserProfileId = async (userId) => {
   const project = await projectModel.find({
-    userId: userId,
+    userProfileId: userId,
     isDeleted: false,
   });
   return project;

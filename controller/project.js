@@ -38,18 +38,25 @@ const createProject = async (req, res) => {
         message: "project not saved",
         success: false,
       });
-    }else{
-     const userId = project.userProfileId
-     const projectId = project._id
-     const category = project.category
-     const message =`New Project has been created.`
-     const type = `Project`
-      
-    const notification = await notificationFunc.createNotificationForProjectCreation(userId,projectId,category,type,message)
+    } else {
+      const userId = project.userProfileId;
+      const projectId = project._id;
+      const category = project.category;
+      const message = `New Project has been created.`;
+      const type = `Project`;
 
-    return res
-      .status(201)
-      .json({ status: "success", data: project, success: true });
+      const notification =
+        await notificationFunc.createNotificationForProjectCreation(
+          userId,
+          projectId,
+          category,
+          type,
+          message
+        );
+
+      return res
+        .status(200)
+        .json({ status: "success", data: project, success: true });
     }
   } catch (error) {
     console.error(" error :", error);
@@ -111,30 +118,36 @@ const updateStatus = async (req, res) => {
     const project = await func.updateStatus(id, status);
 
     if (project) {
-       const proId = project.asignTo
-      const projectId = project._id
-      const userId = project.userProfileId
-     const category = project.category
-     const message =`New update on your Proposal! Status : ${project.status}`
-      const type = `Project`
-      
-    const notification = await notificationFunc.createNotificationForProjectStatus(userId,proId,projectId,category,type,message)
+      const proId = project.asignTo;
+      const projectId = project._id;
+      const userId = project.userProfileId;
+      const category = project.category;
+      const message = `New update on your Proposal! Status : ${project.status}`;
+      const type = `Project`;
+
+      const notification =
+        await notificationFunc.createNotificationForProjectStatus(
+          userId,
+          proId,
+          projectId,
+          category,
+          type,
+          message
+        );
 
       return res
         .status(200)
         .json({ status: "success", data: project, success: true });
     } else {
-      return res
-        .status(400)
-        .json({
-          status: "failed",
-          message: "Update status failed",
-          success: false,
-        });
+      return res.status(200).json({
+        status: "failed",
+        message: "Update status failed",
+        success: false,
+      });
     }
   } catch (error) {
     console.error("Error updating status:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       status: "failed",
       success: false,
       message: "Something went wrong",
@@ -153,17 +166,15 @@ const deleteProject = async (req, res) => {
         .status(200)
         .json({ message: "Deleted successfully", success: true });
     } else {
-      return res
-        .status(200)
-        .json({
-          status: "failed",
-          message: "Delete project failed",
-          success: false,
-        });
+      return res.status(200).json({
+        status: "failed",
+        message: "Delete project failed",
+        success: false,
+      });
     }
   } catch (error) {
     console.error("Error deleting project:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       status: "failed",
       success: false,
       message: "Something went wrong",
@@ -177,13 +188,11 @@ const getProject = async (req, res) => {
     const { id } = req.query;
     const project = await func.getProject(id);
     if (!project) {
-      return res
-        .status(200)
-        .json({
-          status: "failed",
-          message: "project not found",
-          success: false,
-        });
+      return res.status(200).json({
+        status: "failed",
+        message: "project not found",
+        success: false,
+      });
     } else {
       // const proposals = await proposalFunc.getProposalByProjectId(project._id)
       return res
@@ -192,7 +201,7 @@ const getProject = async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching project:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       status: "failed",
       success: false,
       message: "Something went wrong",
@@ -201,33 +210,6 @@ const getProject = async (req, res) => {
   }
 };
 
-const getAllProject = async (req, res) => {
-  try {
-    const projects = await func.getAllProject(req);
-
-    if (projects.length == 0) {
-      return res
-        .status(200)
-        .json({
-          status: "failed",
-          message: "project not found",
-          success: false,
-        });
-    } else {
-      return res
-        .status(200)
-        .json({ status: "successful", data: projects, success: true });
-    }
-  } catch (error) {
-    console.error("Error fetching all projects:", error);
-    return res.status(500).json({
-      status: "failed",
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
-    });
-  }
-};
 
 const getProjectByStatus = async (req, res) => {
   try {
@@ -247,7 +229,7 @@ const getProjectByStatus = async (req, res) => {
       .json({ status: "successful", data: project, success: true });
   } catch (error) {
     console.error("Error fetching project:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       status: "failed",
       success: false,
       message: "Something went wrong",
@@ -272,7 +254,7 @@ const getProjectByLocationAndCategory = async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching project:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       status: "failed",
       success: false,
       message: "Something went wrong",
@@ -281,56 +263,46 @@ const getProjectByLocationAndCategory = async (req, res) => {
   }
 };
 
-const getProjectByStatusProProfileId = async (req, res) => {
+const getProjectByStatusOrProfileId = async (req, res) => {
   try {
-    const { status, asignTo } = req.query;
-    const project = await func.getStatusByProProfileId(asignTo, status);
+    const { _id, type } = req.user;
+    const { status } = req.query;
 
-    if (!project) {
+    let projects;
+
+    if (type === "User") {
+      if (status) {
+        projects = await func.getProjectByStatusAndUserId(_id, status);
+      } else {
+        projects = await func.getAllProject(_id);
+      }
+    } else if (type === "Professional") {
+      projects = await func.getProjectByStatusAndProProfileId(_id, status);
+    } else {
       return res.status(200).json({
         status: "failed",
-        message: "Project not found",
         success: false,
+        message: "Invalid user type",
       });
     }
 
-    return res
-      .status(200)
-      .json({ status: "successful", data: project, success: true });
-  } catch (error) {
-    console.error("Error fetching project:", error);
-    return res.status(500).json({
-      status: "failed",
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
-    });
-  }
-};
-
-const getProjectByStatusAndUserId = async (req, res) => {
-  try {
-    const { status, userProfileId } = req.query;
-    const project = await func.getProjectByStatusAndUserId(
-      userProfileId,
-      status
-    );
-
-    if (!project) {
+    if (!projects || projects.length === 0) {
       return res.status(200).json({
         status: "failed",
         success: false,
         message: "Project not found",
-        success: false,
       });
     }
 
-    return res
-      .status(200)
-      .json({ status: "successful", data: project, success: true });
+    return res.status(200).json({
+      status: "successful",
+      success: true,
+      data: projects,
+    });
+
   } catch (error) {
     console.error("Error fetching project:", error);
-    return res.status(500).json({
+    return res.status(400).json({
       status: "failed",
       success: false,
       message: "Something went wrong",
@@ -338,16 +310,15 @@ const getProjectByStatusAndUserId = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   createProject,
   updateProject,
   deleteProject,
   getProject,
-  getAllProject,
   updateStatus,
   getProjectByStatus,
   getProjectByLocationAndCategory,
-  getProjectByStatusProProfileId,
-  getProjectByStatusAndUserId,
+  getProjectByStatusOrProfileId,
 };

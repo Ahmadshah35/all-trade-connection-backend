@@ -9,7 +9,7 @@ const project= require("../functions/project")
 const upadateProfile = async (req, res) => {
   try {
     // const workingDays = JSON.parse(req.body.category)
-    console.log("data :", req.body);
+    // console.log("data :", req.body);
     // return
     const { id, type } = req.body;
     const userData = req.body;
@@ -93,9 +93,9 @@ const upadateProfile = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
-    const { id,type } = req.query;
+    const { _id,type } = req.user;
     if (type == "User") {
-      const profile = await func.getProfile(id);
+      const profile = await func.getProfile(_id);
       // console.log("first",profile)
       if (!profile) {
         return res
@@ -106,7 +106,7 @@ const getProfile = async (req, res) => {
         const projects = await project.getProjectByUserProfileId(userId)
         const projectLength = projects.length
         const userWithoutPassword = await userProfileModel
-          .findById(id)
+          .findById(_id)
           .select("-password")
           .lean();
         return res
@@ -118,7 +118,7 @@ const getProfile = async (req, res) => {
           });
       }
     } else if (type == "Professional") {
-      const profile = await proFunc.getProProfile(id);
+      const profile = await proFunc.getProProfile(_id);
       if (!profile || profile.length === 0) {
         return res.status(200).json({
           status: "failed",
@@ -134,7 +134,7 @@ const getProfile = async (req, res) => {
         const getProject = await project.getProjectByStatusAndProProfileId(proProfileId,status)
         const completedProject = getProject.length
         const userWithoutPassword = await proProfileModel
-          .findById(id)
+          .findById(_id)
           .select("-password").populate("category")
           .lean();
         return res.status(200).json({

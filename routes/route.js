@@ -13,6 +13,7 @@ const reportController = require("../controller/report")
 const supportController= require("../controller/support")
 const notificationController = require("../controller/notification")
 const { profileUpload, upload, projectUpload } = require("../middleware/upload");
+const userAuth = require("../middleware/auth");
 const router = express.Router();
 
 //Auth
@@ -35,7 +36,7 @@ router.get("/getCategory",categoryController.getCategory );
 
 // Profile And ProProfile
 router.post( "/updateProfile", upload.fields([{ name: "certificate", maxCount: 4 },{ name : "image" , maxCount: 1 }]), profileController.upadateProfile);
-router.get("/getProfile", profileController.getProfile);
+router.get("/getProfile", userAuth,profileController.getProfile);
 router.get("/getAllProfile", profileController.getAllProfile);
 router.get("/getAllProProfile", proProfileController.getAllProProfile); 
 router.get("/getProCategory", proProfileController.getProCategory);
@@ -49,18 +50,16 @@ router.post("/updateProject",projectUpload.fields([{ name : "images" ,maxCount: 
 router.post("/updateStatus", projectController.updateStatus); 
 router.post("/deleteProject", projectController.deleteProject);
 router.get("/getProject", projectController.getProject);
-router.get("/getAllProject", projectController.getAllProject);
 router.get("/getProjectByStatus", projectController.getProjectByStatus);
 router.post("/getProjectByLocationAndCategory",projectController.getProjectByLocationAndCategory);
-router.get("/getProjectByStatusProProfileId",projectController.getProjectByStatusProProfileId );
-router.get("/getProjectByStatusAndUserId",projectController.getProjectByStatusAndUserId );
+router.get("/getProjectByStatusOrProfileId",userAuth,projectController.getProjectByStatusOrProfileId );
 
 //Profiles Location
 router.post("/createLocation", locationController.createLocation);
 router.post("/updateLocation", locationController.upadateLocation);
 router.post("/deleteLocation", locationController.deleteLocation);
 router.get("/getLocation", locationController.getLocation);
-router.get("/getLocationByProfileId", locationController.getLocationByProfileId);
+router.get("/getLocationByProfileId",userAuth, locationController.getLocationByProfileId);
 router.post("/updateSelectedLocation", locationController.updateSelectedLocation);
 
 //Proposal
@@ -69,7 +68,7 @@ router.post("/updateProposal", proposalController.updateProposal);
 router.post("/deleteProposal", proposalController.deleteProposal);
 router.post("/updateProposalStatus",proposalController.updateProposalStatus)
 router.get("/getProposal", proposalController.getProposal);
-router.get("/getProposalByStatusAndProProfileId", proposalController.getProposalByStatusAndProProfileId);
+router.get("/getProposalByStatusAndProProfileId",userAuth, proposalController.getProposalByStatusAndProProfileId);
 router.get("/getProposalByProjectIdOrStatus", proposalController.getProposalByProjectIdOrStatus);
 
 //Admin
@@ -85,8 +84,7 @@ router.post("/createReview",reviewController.createReview);
 router.post("/updateReview", reviewController.updateReview);
 router.post("/deleteReview", reviewController.deleteReview);
 router.get("/getReview", reviewController.getReview);
-router.get("/getAllReview", reviewController.getAllReview);
-router.get("/getAllReviewOnProProfile", reviewController.getAllReviewOnProProfile);
+router.get("/getAllReviewByProfileId",userAuth, reviewController.getAllReviewByProfileId);
 router.get("/averageRating", reviewController.getAverageRating);
 
 //Support
@@ -95,8 +93,7 @@ router.get("/getSupport", supportController.getSupport);
 router.get("/getAllSupport", supportController.getAllSupport);
 
 //Notification
-router.get("/getAllNotificationOfUser", notificationController.getAllNotificationOfUser);
-router.get("/getAllNotificationOfProfessional", notificationController.getAllNotificationOfProfessional);
+router.get("/getAllNotifications",userAuth, notificationController.getAllNotifications);
 router.post("/deleteNotification", notificationController.deleteNotification);
 
 

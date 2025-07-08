@@ -1,9 +1,11 @@
 const { default: mongoose } = require("mongoose");
 const func = require("../functions/notification");
 
-const getAllNotificationOfProfessional = async (req, res) => {
+const getAllNotifications = async (req, res) => {
   try {
-    const notification = await func.getAllNotificationOfProfessional(req);
+   const {_id , type} = req.user
+   if(type == "User"){
+ const notification = await func.getAllNotificationOfUser(_id);
     if (notification.length == 0) {
       res
         .status(200)
@@ -13,27 +15,24 @@ const getAllNotificationOfProfessional = async (req, res) => {
         .status(200)
         .json({ message: " sucessfully ", data: notification, success: true });
     }
+   }
+   if(type == "Professional"){
+    const notification = await func.getAllNotificationOfProfessional(_id);
+    if (notification.length == 0) {
+      res
+        .status(200)
+        .json({ message: "notification not found", success: false });
+    } else {
+      res
+        .status(200)
+        .json({ message: " sucessfully ", data: notification, success: true });
+    }
+  }
   } catch (error) {
     res.status(200).json({ message: "something went wrong", success: false });
   }
 };
 
-const getAllNotificationOfUser = async (req, res) => {
-  try {
-    const notification = await func.getAllNotificationOfUser(req);
-    if (notification.length == 0) {
-      res
-        .status(200)
-        .json({ message: "notification not found", success: false });
-    } else {
-      res
-        .status(200)
-        .json({ message: " sucessfully ", data: notification, success: true });
-    }
-  } catch (error) {
-    res.status(200).json({ message: "something went wrong", success: false });
-  }
-};
 
 const deleteNotification = async (req, res) => {
   try {
@@ -53,7 +52,6 @@ const deleteNotification = async (req, res) => {
 };
 
 module.exports = {
-  getAllNotificationOfUser,
-  getAllNotificationOfProfessional,
+  getAllNotifications,
   deleteNotification,
 };

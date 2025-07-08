@@ -108,7 +108,7 @@ const login = async (req, res) => {
             .json({ message: "Invalid password", success: false });
         }
         const token = jwt.sign(
-          { userId: pro._id, email: pro.email },
+          { _id: pro._id, email: pro.email, type :pro.type },
           process.env.JWT_SECRET_TOKEN,
           { expiresIn: "5d" }
         );
@@ -139,7 +139,7 @@ const login = async (req, res) => {
           .json({ message: "Invalid password", success: false });
       }
       const token = jwt.sign(
-        { userId: user._id, email: user.email },
+        { _id: user._id, email: user.email, type:user.type },
         process.env.JWT_SECRET_TOKEN,
         { expiresIn: "5d" }
       );

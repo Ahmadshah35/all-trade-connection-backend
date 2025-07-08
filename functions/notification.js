@@ -37,8 +37,7 @@ const createNotificationForProposal = async (proId,projectId,proposalId,type,mes
   return result;
 };
 
-const getAllNotificationOfUser = async (req) => {
-  const { userId } = req.query;
+const getAllNotificationOfUser = async (userId) => {
   const notification = await notificationModel.find({ userId: userId }).populate({
     path:"userId",
     select:"-password"
@@ -48,8 +47,7 @@ const getAllNotificationOfUser = async (req) => {
   return notification;
 };
 
-const getAllNotificationOfProfessional = async (req) => {
-  const { proId } = req.query;
+const getAllNotificationOfProfessional = async (proId) => {
   const notification = await notificationModel.find({ proId: proId }).populate({
     path:"proId",
     select:"-password"

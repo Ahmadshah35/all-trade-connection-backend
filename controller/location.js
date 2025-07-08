@@ -130,10 +130,10 @@ const getLocation = async (req, res) => {
 
 const getLocationByProfileId = async (req, res) => {
   try {
-    const {userProfileId, proProfileId } = req.query;
+    const {_id, type } = req.user;
 
-    if (proProfileId){
-    const location = await func.getLocationByProProfileId(proProfileId);
+    if (type == "Professional"){
+    const location = await func.getLocationByProProfileId(_id);
     if (location.length == 0) {
       return res.status(200).json({
         status: "failed",
@@ -146,8 +146,8 @@ const getLocationByProfileId = async (req, res) => {
         .json({ status: "sucessful", data: location, success: true });
     }
   }
-  if(userProfileId){
-    const location = await func.getLocationByUserProfileId(userProfileId);
+  if(type == "User"){
+    const location = await func.getLocationByUserProfileId(_id);
     if (location.length == 0) {
       return res.status(200).json({
         status: "failed",
