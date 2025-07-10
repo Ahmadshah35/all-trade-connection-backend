@@ -74,7 +74,6 @@ const projectSchema = new mongoose.Schema(
     },
     state: {
       type: String,
-      required: true,
     },
     zipCode: {
       type: String,
