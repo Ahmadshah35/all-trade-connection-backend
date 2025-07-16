@@ -22,7 +22,7 @@ const createReview = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Transaction failed:", error);
+    console.error("failed:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -98,6 +98,29 @@ const getReview = async (req, res) => {
     });
   }
 };
+
+const getReviewByUserIdOrProId = async (req, res) => {
+  try {
+    const { userId ,proId } = req.query;
+    const review = await func.getReviewByUserIdOrProId(userId ,proId);
+    if (!review || review.length == 0) {
+      return res
+        .status(200)
+        .json({ message: "reviews not found", success: false });
+    } else {
+      return res
+        .status(200)
+        .json({ message: "sucessful", data: review, success: true });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      status: "failed",
+      message: "something went wrong",
+      success: false,
+    });
+  }
+};
+
 
  
 const getAllReviewByProfileId = async (req, res) => {
@@ -185,5 +208,6 @@ module.exports = {
   deleteReview,
   getReview,
   getAverageRating,
-  getAllReviewByProfileId
+  getAllReviewByProfileId,
+  getReviewByUserIdOrProId
 };

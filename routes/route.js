@@ -86,6 +86,7 @@ router.post("/deleteReview", reviewController.deleteReview);
 router.get("/getReview", reviewController.getReview);
 router.get("/getAllReviewByProfileId",userAuth, reviewController.getAllReviewByProfileId);
 router.get("/averageRating", reviewController.getAverageRating);
+router.get("/getReviewByUserIdOrProId", reviewController.getReviewByUserIdOrProId);
 
 //Support
 router.post("/createSupport",supportController.createSupport);
