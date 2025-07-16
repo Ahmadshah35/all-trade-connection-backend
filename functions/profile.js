@@ -1,15 +1,15 @@
 const profileModel = require("../models/userProfile");
 
-const updateProfile = async (req ,id, userData) => {
-  // console.log("data",req.files.image[0].filename)
-  // return
-const image = req.files.image[0].filename
-  const profile = await profileModel.findByIdAndUpdate(id,
-    { $set:{ ...userData , image : image}}, 
-    { new: true }
-  );
-  // console.log(profile)
-  return profile;
+const updateProfile = async (req, id, userData) => {
+    if (req.files && req.files.image && req.files.image[0]) {
+      userData.image = req.files.image[0].filename;
+    }
+    const profile = await profileModel.findByIdAndUpdate(
+      id,
+      { $set: userData },
+      { new: true }
+    );
+    return profile;
 };
 
 const profileCreated = async (userProfileId) => {
