@@ -29,10 +29,12 @@ const getReview = async (id) => {
   return review;
 }; 
 
-const getReviewByUserIdOrProId = async (userId,proId) => {
-  const review = await reviewModel.find({userId:userId ,proProfileId:proId}).sort({createdAt: -1});
+const getReviewByUserIdOrProId = async (userId, proId) => {
+  const review = await reviewModel
+    .find({ userId: userId, proProfileId: proId })
+    .sort({ createdAt: -1 }); 
   return review;
-}; 
+};
 
 const getAllReview = async (userId) => {
   const review = await reviewModel.find(userId);
