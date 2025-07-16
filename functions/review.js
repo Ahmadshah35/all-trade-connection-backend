@@ -32,6 +32,7 @@ const getReview = async (id) => {
 const getReviewByUserIdOrProId = async (userId, proId) => {
   const review = await reviewModel
     .find({ userId: userId, proProfileId: proId })
+    .populate({path:"userId" , select:"-password"})
     .sort({ createdAt: -1 }); 
   return review;
 };
