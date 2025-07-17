@@ -101,7 +101,7 @@ const projectSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Hired", "In-Discussion", "Done", "Canceled", "Open"],
+      enum: ["Hired", "In Discussion", "Done", "Canceled", "Open"],
       default: "Open",
     },
     ProfessionalType: {

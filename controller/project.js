@@ -117,7 +117,7 @@ const updateStatus = async (req, res) => {
     const { id, status, inDiscussionPro } = req.body;
     let project;
 
-    if (status === "In-Discussion") {
+    if (status === "In Discussion") {
       project = await func.updateProIdOrStatus(id, status, inDiscussionPro);
     } else {
       project = await func.updateStatus(id, status);
