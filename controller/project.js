@@ -114,32 +114,39 @@ const updateProject = async (req, res) => {
 
 const updateStatus = async (req, res) => {
   try {
-    const { id, status } = req.body;
-    const project = await func.updateStatus(id, status);
+    const { id, status, inDiscussionPro } = req.body;
+    let project;
+
+    if (status === "In-Discussion") {
+      project = await func.updateProIdOrStatus(id, status, inDiscussionPro);
+    } else {
+      project = await func.updateStatus(id, status);
+    }
 
     if (project) {
       const proId = project.asignTo;
       const projectId = project._id;
       const userId = project.userProfileId;
       const category = project.category;
-      const message = `New update on your Proposal! Status : ${project.status}`;
+      const message = `New update on your Proposal! Status: ${project.status}`;
       const type = `Project`;
 
-      const notification =
-        await notificationFunc.createNotificationForProjectStatus(
-          userId,
-          proId,
-          projectId,
-          category,
-          type,
-          message
-        );
+      await notificationFunc.createNotificationForProjectStatus(
+        userId,
+        proId,
+        projectId,
+        category,
+        type,
+        message
+      );
 
-      return res
-        .status(200)
-        .json({ status: "success", data: project, success: true });
-    } else {
       return res.status(200).json({
+        status: "success",
+        data: project,
+        success: true,
+      });
+    } else {
+      return res.status(400).json({
         status: "failed",
         message: "Update status failed",
         success: false,
@@ -147,7 +154,7 @@ const updateStatus = async (req, res) => {
     }
   } catch (error) {
     console.error("Error updating status:", error);
-    return res.status(400).json({
+    return res.status(500).json({
       status: "failed",
       success: false,
       message: "Something went wrong",
@@ -209,7 +216,6 @@ const getProject = async (req, res) => {
     });
   }
 };
-
 
 const getProjectByStatus = async (req, res) => {
   try {
@@ -299,7 +305,6 @@ const getProjectByStatusOrProfileId = async (req, res) => {
       success: true,
       data: projects,
     });
-
   } catch (error) {
     console.error("Error fetching project:", error);
     return res.status(400).json({
@@ -310,7 +315,6 @@ const getProjectByStatusOrProfileId = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   createProject,

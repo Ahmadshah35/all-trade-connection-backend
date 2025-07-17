@@ -58,9 +58,10 @@ router.get("/getProjectByStatusOrProfileId",userAuth,projectController.getProjec
 router.post("/createLocation", locationController.createLocation);
 router.post("/updateLocation", locationController.upadateLocation);
 router.post("/deleteLocation", locationController.deleteLocation);
+router.post("/updateSelectedLocation", locationController.updateSelectedLocation);
 router.get("/getLocation", locationController.getLocation);
 router.get("/getLocationByProfileId",userAuth, locationController.getLocationByProfileId);
-router.post("/updateSelectedLocation", locationController.updateSelectedLocation);
+
 
 //Proposal
 router.post("/createProposal",proposalController.createProposal);

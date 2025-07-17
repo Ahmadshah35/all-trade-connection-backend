@@ -3,50 +3,58 @@ const proModel = require("../models/proProfile");
 const updateProProfile = async (id, userData, files) => {
   const existingProfile = await proModel.findById(id);
   if (!existingProfile) throw new Error("Profile not found");
-if(files?.certificate?.length){
-  const existingCertificates = existingProfile.certificate || [];
-  const newCertificateNames = files?.certificate?.map(file => file.filename) || [];
+  if (files?.certificate?.length) {
+    const existingCertificates = existingProfile.certificate || [];
+    const newCertificateNames =
+      files?.certificate?.map((file) => file.filename) || [];
 
-  const retainedCertificates = existingCertificates.filter(file => newCertificateNames.includes(file));
-  const addedCertificates = newCertificateNames.filter(file => !existingCertificates.includes(file));
-  userData.certificate = [...retainedCertificates, ...addedCertificates];
-}else{
-  userData.certificate = existingProfile.certificate
-}
+    const retainedCertificates = existingCertificates.filter((file) =>
+      newCertificateNames.includes(file)
+    );
+    const addedCertificates = newCertificateNames.filter(
+      (file) => !existingCertificates.includes(file)
+    );
+    userData.certificate = [...retainedCertificates, ...addedCertificates];
+  } else {
+    userData.certificate = existingProfile.certificate;
+  }
   if (files?.image?.length) {
     userData.image = files.image[0].filename;
   } else {
     userData.image = existingProfile.image || null;
   }
 
-   if (userData.workingDays) {
-  // if includingTheseDays is an array of strings, check if first element is a JSON string
-  if (Array.isArray(userData.workingDays) && userData.workingDays.length === 1) {
-    try {
-      const parsed = JSON.parse(userData.workingDays[0]);
-      if (Array.isArray(parsed)) {
-        userData.workingDays = parsed;
+  if (userData.workingDays) {
+    // if includingTheseDays is an array of strings, check if first element is a JSON string
+    if (
+      Array.isArray(userData.workingDays) &&
+      userData.workingDays.length === 1
+    ) {
+      try {
+        const parsed = JSON.parse(userData.workingDays[0]);
+        if (Array.isArray(parsed)) {
+          userData.workingDays = parsed;
+        }
+      } catch (err) {
+        // parsing failed, leave it as is
       }
-    } catch (err) {
-      // parsing failed, leave it as is
-    }
-  } else if (typeof userData.workingDays === "string") {
-    // if it's a single string (not in array), try parse it too
-    try {
-      const parsed = JSON.parse(userData.workingDays);
-      if (Array.isArray(parsed)) {
-        userData.workingDays = parsed;
+    } else if (typeof userData.workingDays === "string") {
+      // if it's a single string (not in array), try parse it too
+      try {
+        const parsed = JSON.parse(userData.workingDays);
+        if (Array.isArray(parsed)) {
+          userData.workingDays = parsed;
+        }
+      } catch (err) {
+        // parsing failed, leave as is
       }
-    } catch (err) {
-      // parsing failed, leave as is
     }
+  } else {
+    userData.workingDays = existingProfile.workingDays || [];
   }
-} else {
-  userData.workingDays = existingProfile.workingDays || [];
-}
-if(userData.category){
-  userData.category =JSON.parse(userData.category)
-}
+  if (userData.category) {
+    userData.category = JSON.parse(userData.category);
+  }
 
   const updatedProfile = await proModel.findByIdAndUpdate(
     id,
@@ -57,31 +65,32 @@ if(userData.category){
   return updatedProfile;
 };
 
-
-const updateAvgRating = async (id,avgRating) => {
-
+const updateAvgRating = async (id, avgRating) => {
   const updatedProfile = await proModel.findByIdAndUpdate(
     id,
-     {$set:{avgRating:avgRating}
-     },
+    { $set: { avgRating: avgRating } },
     { new: true }
   );
   return updatedProfile;
-}
-
+};
 
 const proProfileCreated = async (proProfileId) => {
-  const profile = await proModel.findByIdAndUpdate(proProfileId,
-    { $set:{profileCreated: true}},
+  const profile = await proModel.findByIdAndUpdate(
+    proProfileId,
+    { $set: { profileCreated: true } },
     { new: true }
   );
   // console.log(profile)
   return profile;
 };
 
-
 const getProProfile = async (id) => {
   const profile = await proModel.findById(id, { isDeleted: false });
+  return profile;
+};
+
+const getAllProProfile = async (req) => {
+  const profile = await proModel.find({ isDeleted: false }).select("-password");
   return profile;
 };
 
@@ -99,9 +108,15 @@ const getProProfileByProId = async (proId) => {
 };
 
 const getProProfileByLocationAndCategory = async (req) => {
-  const { latitude, longitude, category } = req.body;
+  const { latitude, longitude, category, firstName, lastName } = req.body;
   // console.log("first",req.query)
   const filter = {};
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
 
   if (category) {
     filter.category = category;
@@ -119,7 +134,7 @@ const getProProfileByLocationAndCategory = async (req) => {
     };
   }
   // console.log("first",filter)
-  const result = await proModel.find(filter).select("-password")
+  const result = await proModel.find(filter).select("-password");
   return result;
 };
 
@@ -142,7 +157,6 @@ const getProProfiletByLocation = async (req) => {
   const result = await proModel.find(filter).select("-password");
   return result;
 };
-
 
 const updateIncludingTheseDays = async (id, newDays) => {
   const profile = await proModel.findById(id);
@@ -183,5 +197,6 @@ module.exports = {
   updateIncludingTheseDays,
   proProfileCreated,
   getProProfiletByLocation,
-  updateAvgRating
+  updateAvgRating,
+  getAllProProfile,
 };

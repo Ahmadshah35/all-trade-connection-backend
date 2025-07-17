@@ -32,6 +32,12 @@ const projectSchema = new mongoose.Schema(
         ref: "category",
       },
     ],
+    inDiscussionPro:[
+      {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"proProfile"
+      }
+      ],
     selectDate: {
       type: Date,
       required: true,

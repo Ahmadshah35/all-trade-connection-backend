@@ -6,7 +6,7 @@ const getAllProProfile = async (req, res) => {
   try {
     const profile = await func.getAllProProfile(req);
 
-    if (profile.length == 0) {
+    if (!profile ||  profile.length == 0) {
       return res
         .status(200)
         .json({ status: "failed", message: "invalid Id", success: false });

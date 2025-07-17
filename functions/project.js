@@ -18,25 +18,28 @@ const createProject = async (req) => {
   });
 
   const result = await project.save();
-  return result
+  return result;
 };
 
 const updateProject = async (id, userData, files) => {
-
   const existingProject = await projectModel.findById(id);
 
- if (files?.images?.length) {
-  const existingImages = existingProject.images || [];
-  const newImageNames = files.images.map(file => file.filename);
+  if (files?.images?.length) {
+    const existingImages = existingProject.images || [];
+    const newImageNames = files.images.map((file) => file.filename);
 
-  const retainedImages = existingImages.filter(img => newImageNames.includes(img));
+    const retainedImages = existingImages.filter((img) =>
+      newImageNames.includes(img)
+    );
 
-  const addedImages = newImageNames.filter(img => !existingImages.includes(img));
+    const addedImages = newImageNames.filter(
+      (img) => !existingImages.includes(img)
+    );
 
-  userData.images = [...retainedImages, ...addedImages];
-} else {
-  userData.images = existingProject.images;
-}
+    userData.images = [...retainedImages, ...addedImages];
+  } else {
+    userData.images = existingProject.images;
+  }
 
   const result = await projectModel.findByIdAndUpdate(
     id,
@@ -47,6 +50,18 @@ const updateProject = async (id, userData, files) => {
   return result;
 };
 
+const updateProIdOrStatus = async (id, status, inDiscussionPro) => {
+  const result = await projectModel.findByIdAndUpdate(
+    id,
+    {
+      $set: { status },
+      $addToSet: { inDiscussionPro },
+    },
+    { new: true }
+  );
+
+  return result;
+};
 
 const deleteProject = async (id) => {
   const project = await projectModel.findByIdAndDelete(id);
@@ -54,7 +69,11 @@ const deleteProject = async (id) => {
 };
 
 const getProject = async (id) => {
-  const project = await projectModel.findById(id, { isDeleted: false }).populate({path:"asignTo",select:"-password"}).populate({path :"userProfileId", select:"-password"});
+  const project = await projectModel
+    .findById(id, { isDeleted: false })
+    .populate({ path: "asignTo", select: "-password" })
+    .populate({ path: "userProfileId", select: "-password" })
+    .populate({path :"inDiscussionPro", select:"-password"})
   return project;
 };
 
@@ -77,7 +96,7 @@ const updateStatus = async (id, status) => {
 
 const updateProjectStatusAndAsignTo = async (projectId, ProProfileId) => {
   const project = await projectModel.findByIdAndUpdate(
-    {_id : projectId },
+    { _id: projectId },
     { $set: { status: "Hired", asignTo: ProProfileId } },
     { new: true }
   );
@@ -87,9 +106,9 @@ const updateProjectStatusAndAsignTo = async (projectId, ProProfileId) => {
 const getProjectCategory = async (req) => {
   const { category } = req.query;
   const project = await projectModel.find({
-    category:{ $in : category},
+    category: { $in: category },
     isDeleted: false,
-  })
+  });
   // .populate({
   //   path:"userProfileId",
   //   select:"-password"
@@ -107,7 +126,7 @@ const getProjectByLocationAndCategory = async (req) => {
   const filter = {};
 
   if (category) {
-    filter.category ={$in: category};
+    filter.category = { $in: category };
   }
 
   if (longitude && latitude) {
@@ -122,7 +141,7 @@ const getProjectByLocationAndCategory = async (req) => {
     };
   }
 
-  const result = await projectModel.find(filter)
+  const result = await projectModel.find(filter);
   // .populate({
   //   path: "userProfileId",
   //   select: "-password",
@@ -130,7 +149,6 @@ const getProjectByLocationAndCategory = async (req) => {
 
   return result;
 };
-
 
 const getProjectByLocation = async (req) => {
   const { longitude, latitude } = req.query;
@@ -147,7 +165,7 @@ const getProjectByLocation = async (req) => {
       },
     };
   }
-  const result = await projectModel.find(filter)
+  const result = await projectModel.find(filter);
   // .populate({
   //   path: "userProfileId",
   //   select: "-password",
@@ -156,37 +174,41 @@ const getProjectByLocation = async (req) => {
   return result;
 };
 
-
 const getProjectByStatusAndProProfileId = async (asignTo, status) => {
-  const project = await projectModel.find({
-    asignTo: asignTo,
-    status: status,
-    isDeleted: false,
-  }).populate({
-    path: "asignTo",
-    select: "-password",
-  }).populate({
-    path:"userProfileId",
-    select:"-password"
-  });
+  const project = await projectModel
+    .find({
+      asignTo: asignTo,
+      status: status,
+      isDeleted: false,
+    })
+    .populate({
+      path: "asignTo",
+      select: "-password",
+    })
+    .populate({
+      path: "userProfileId",
+      select: "-password",
+    });
   return project;
 };
 
 const getProjectByStatusAndUserId = async (userProfileId, status) => {
-  const project = await projectModel.find({
-    userProfileId: userProfileId,
-    status: status,
-    isDeleted: false,
-  }).populate({
-    path: "userProfileId",
-    select: "-password",
-  }).populate({
-    path:"asignTo",
-    select:"-password"
-  });
+  const project = await projectModel
+    .find({
+      userProfileId: userProfileId,
+      status: status,
+      isDeleted: false,
+    })
+    .populate({
+      path: "userProfileId",
+      select: "-password",
+    })
+    .populate({
+      path: "asignTo",
+      select: "-password",
+    });
   return project;
-
-}
+};
 
 const getProjectByUserProfileId = async (userId) => {
   const project = await projectModel.find({
@@ -196,17 +218,16 @@ const getProjectByUserProfileId = async (userId) => {
   return project;
 };
 
-
 const searchProject = async (req) => {
   const { titleName, category } = req.body;
   const filter = {};
-  if(titleName){
-      filter.titleName = { $regex: `^${titleName}$`, $options: 'i' }
+  if (titleName) {
+    filter.titleName = { $regex: `^${titleName}$`, $options: "i" };
   }
-  if(category){
-      filter.category = category
+  if (category) {
+    filter.category = category;
   }
-  const result = await projectModel.find(filter)
+  const result = await projectModel.find(filter);
   return result;
 };
 
@@ -218,7 +239,6 @@ const updateProjectStatusByProjectId = async (projectId) => {
   });
   return project;
 };
-
 
 module.exports = {
   createProject,
@@ -236,5 +256,6 @@ module.exports = {
   updateProjectStatusAndAsignTo,
   searchProject,
   updateProjectStatusByProjectId,
-  getProjectByUserProfileId
+  getProjectByUserProfileId,
+  updateProIdOrStatus,
 };
