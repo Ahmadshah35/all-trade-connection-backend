@@ -108,14 +108,17 @@ const getProProfileByProId = async (proId) => {
 };
 
 const getProProfileByLocationAndCategory = async (req) => {
-  const { latitude, longitude, category, firstName, lastName } = req.body;
+  const { latitude, longitude, category, fullName } = req.body;
   // console.log("first",req.query)
   const filter = {};
-  if (firstName) {
-    filter.firstName = firstName;
-  }
-  if (lastName) {
-    filter.lastName = lastName;
+  if (fullName) {
+    filter.$expr = {
+      $regexMatch: {
+        input: { $concat: ["$firstName", " ", "$lastName"] },
+        regex: fullName,
+        options: "i" 
+      }
+    };
   }
 
   if (category) {
