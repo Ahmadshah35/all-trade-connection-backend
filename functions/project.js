@@ -50,11 +50,10 @@ const updateProject = async (id, userData, files) => {
   return result;
 };
 
-const updateProIdOrStatus = async (id, status, inDiscussionPro) => {
+const updateProIdInProject = async (id, inDiscussionPro) => {
   const result = await projectModel.findByIdAndUpdate(
     id,
     {
-      $set: { status },
       $addToSet: { inDiscussionPro },
     },
     { new: true }
@@ -257,5 +256,5 @@ module.exports = {
   searchProject,
   updateProjectStatusByProjectId,
   getProjectByUserProfileId,
-  updateProIdOrStatus,
+  updateProIdInProject,
 };
