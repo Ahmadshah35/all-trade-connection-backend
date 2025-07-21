@@ -27,8 +27,8 @@ const deleteProposal = async (id) => {
 
 const getProposal = async (id) => {
   const proposal = await proposalModel.findById(id).populate({
-    path :"proProfileId",
-    select:"-password"
+    path: "proProfileId",
+    select: "-password",
   });
   return proposal;
 };
@@ -44,28 +44,39 @@ const updateProposalStatus = async (req) => {
 };
 
 const getProposalByStatusAndProProfileId = async (proProfileId, status) => {
-  const proposal = await proposalModel.find({
-    proProfileId: proProfileId,
-    status: status,
-  }).populate({
-    path:"proProfileId",
-    select:"-password"
-  }).populate({
-    path:"projectId"
-  });
+  const proposal = await proposalModel
+    .find({
+      proProfileId: proProfileId,
+      status: status,
+    })
+    .populate({
+      path: "proProfileId",
+      select: "-password",
+    })
+    .populate({
+      path: "projectId",
+    });
   // console.log("first",proposal)
   return proposal;
 };
 
 const getProposalByProjectIdOrStatus = async (req) => {
-  const {projectId,status} = req.query
-  const filter = {projectId}
-  if(status){
-    filter.status = status
+  const { projectId, status, proProfileId } = req.query;
+  const filter = {};
+  if (proProfileId) {
+    filter.proProfileId = proProfileId;
+  }
+
+  if (projectId) {
+    filter.projectId = projectId;
+  }
+
+  if (status) {
+    filter.status = status;
   }
   const proposal = await proposalModel.find(filter).populate({
-    path :"proProfileId",
-    select:"-password"
+    path: "proProfileId",
+    select: "-password",
   });
   // console.log("first",proposal)
   return proposal;
