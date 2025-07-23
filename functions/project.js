@@ -174,12 +174,18 @@ const getProjectByLocation = async (req) => {
 };
 
 const getProjectByStatusAndProProfileId = async (asignTo, status) => {
+  const filter = { isDeleted: false }; 
+
+  if (asignTo) {
+    filter.asignTo = asignTo;
+  }
+
+  if (status) {
+    filter.status = status;
+  }
+
   const project = await projectModel
-    .find({
-      asignTo: asignTo,
-      status: status,
-      isDeleted: false,
-    })
+    .find(filter)
     .populate({
       path: "asignTo",
       select: "-password",
@@ -188,16 +194,24 @@ const getProjectByStatusAndProProfileId = async (asignTo, status) => {
       path: "userProfileId",
       select: "-password",
     });
+
   return project;
 };
 
+
 const getProjectByStatusAndUserId = async (userProfileId, status) => {
+
+    const filter = { isDeleted: false }; 
+
+  if (userProfileId) {
+    filter.userProfileId = userProfileId;
+  }
+
+  if (status) {
+    filter.status = status;
+  }
   const project = await projectModel
-    .find({
-      userProfileId: userProfileId,
-      status: status,
-      isDeleted: false,
-    })
+    .find(filter)
     .populate({
       path: "userProfileId",
       select: "-password",
