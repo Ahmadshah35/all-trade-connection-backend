@@ -74,10 +74,12 @@ const getProposalByProjectIdOrStatus = async (req) => {
   if (status) {
     filter.status = status;
   }
-  const proposal = await proposalModel.find(filter).populate({
+  const proposal = await proposalModel.find(filter)
+  .populate({
     path: "proProfileId",
     select: "-password",
-  });
+  })
+  .populate( "projectId");
   // console.log("first",proposal)
   return proposal;
 };

@@ -101,7 +101,7 @@ const getProposal = async (req, res) => {
     if (!proposal) {
       return res
         .status(200)
-        .json({ status: "incorrect credentials", success: false });
+        .json({ status: "failed", success: false });
     } else {
       return res
         .status(200)
