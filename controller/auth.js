@@ -5,6 +5,7 @@ const mailer = require("../helper/mailer");
 const mongoose = require("mongoose");
 const userProfile = require("../models/userProfile");
 const proProfile = require("../models/proProfile");
+const OtpModel = require("../models/otp")
 const locationModel = require("../models/location");
 
 const signUp = async (req, res) => {
@@ -23,11 +24,21 @@ const signUp = async (req, res) => {
           process.env.JWT_SECRET_TOKEN,
           { expiresIn: "1y" }
         );
-        const createOtp = await funcOtp.generateOtp(email);
+        const Otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const getOtp = await OtpModel.findOne({ email: email });
+      
+
+         if (getOtp) {
+          getOtp.otp = Otp;
+         await getOtp.save();
+         } else {
+         await funcOtp.generateOtp(email,Otp)
+         }
 
         const userData = {
           email,
-          Otp: createOtp.otp,
+          Otp: Otp,
         };
 
         const send = await mailer.sendMail(userData);
@@ -35,7 +46,7 @@ const signUp = async (req, res) => {
         return res.status(200).json({
           success: true,
           message: "Otp sent Successfully!",
-          data: { email, type, otp: createOtp.otp },
+          data: { email, type, otp: Otp },
           accessToken: token,
         });
       }
@@ -52,11 +63,21 @@ const signUp = async (req, res) => {
           process.env.JWT_SECRET_TOKEN,
           { expiresIn: "1y" }
         );
-        const createOtp = await funcOtp.generateOtp(email);
+        const Otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const getOtp = await OtpModel.findOne({ email: email });
+      
+
+         if (getOtp) {
+          getOtp.otp = Otp;
+          await getOtp.save();
+        } else {
+         await funcOtp.generateOtp(email,Otp);
+         }
 
         const userData = {
           email,
-          Otp: createOtp.otp,
+          Otp: Otp,
         };
 
         const send = await mailer.sendMail(userData);
@@ -64,7 +85,7 @@ const signUp = async (req, res) => {
         return res.status(200).json({
           success: true,
           message: "Otp sent Successfully!",
-          data: { email, type, otp: createOtp.otp },
+          data: { email, type, otp: Otp },
           accessToken: token,
         });
       }

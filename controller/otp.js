@@ -5,6 +5,7 @@ const userFunc = require("../functions/auth");
 const mailer = require("../helper/mailer");
 const otpFunc = require("../functions/otp");
 const locationFunc = require("../functions/location");
+const otpModel = require("../models/otp");
 
 const verifyOtp = async (req, res) => {
   try {
@@ -19,17 +20,16 @@ const verifyOtp = async (req, res) => {
             message: "Otp verified sucessfully for resetPassword User ",
             success: true,
           });
-       
-         
         } else {
           const validatePro = await userFunc.validiateEmailPro(req);
-          if(validatePro){
+          if (validatePro) {
             const deleteOtp = await otpFunc.deleteOtp(req);
             res.status(200).json({
-              message: "Otp verified sucessfully for resetPassword professional ",
+              message:
+                "Otp verified sucessfully for resetPassword professional ",
               success: true,
             });
-          }else{
+          } else {
             res.status(200).json({
               message: "email not found for resset password ",
               success: false,
@@ -67,8 +67,7 @@ const verifyOtp = async (req, res) => {
                 email: user.email,
                 userName: user.userName,
                 type: user.type,
-                profileCreated:user.profileCreated
-                
+                profileCreated: user.profileCreated,
               },
               accessToken: token,
             });
@@ -77,7 +76,9 @@ const verifyOtp = async (req, res) => {
           if (type === "Professional") {
             const validate = await userFunc.validiateEmailPro(req);
             if (validate) {
-              res.status(200).json({ message: "already signUp", success: true });
+              res
+                .status(200)
+                .json({ message: "already signUp", success: true });
             } else {
               const decode = jwt.verify(
                 addSignUpToken,
@@ -104,7 +105,7 @@ const verifyOtp = async (req, res) => {
                   email: pro.email,
                   userName: pro.userName,
                   type: pro.type,
-                  profileCreated:pro.profileCreated
+                  profileCreated: pro.profileCreated,
                 },
                 accessToken: token,
               });
@@ -127,18 +128,15 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-
 const verify = async (req, res) => {
   try {
     const verify = await func.verifyOtp(req, session);
     if (verify) {
-     return res.status(200).json({
+      return res.status(200).json({
         message: "sucessfully verify",
         success: true,
         data: verify,
       });
-
-      
     } else {
       res.status(200).json({ message: "invalid Otp", success: false });
     }
@@ -166,36 +164,50 @@ const resendOtp = async (req, res) => {
           success: false,
         });
       } else {
-        const gen = await func.generateOtp(email);
+        const Otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const getOtp = await otpModel.findOne({ email: email });
+
+        if (getOtp) {
+          getOtp.otp = Otp;
+          await getOtp.save();
+        } else {
+          await otpFunc.generateOtp(email, Otp);
+        }
         const userData = {
           email: req.body.email,
-          Otp: gen.otp,
+          Otp: Otp,
         };
         const send = await mailer.sendMail(userData);
         const _id = getPro._id;
-        res
-          .status(200)
-          .json({
-            message: "sucessfully otp  sent",
-            success: true,
-            data: { ...userData, _id },
-          });
-      }
-    } else {
-      const gen = await func.generateOtp(email);
-      const userData = {
-        email: req.body.email,
-        Otp: gen.otp,
-      };
-      const send = await mailer.sendMail(userData);
-      const _id = getUser._id;
-      res
-        .status(200)
-        .json({
+        res.status(200).json({
           message: "sucessfully otp  sent",
           success: true,
           data: { ...userData, _id },
         });
+      }
+    } else {
+      const Otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+      const getOtp = await otpModel.findOne({ email: email });
+
+      if (getOtp) {
+        getOtp.otp = Otp;
+        await getOtp.save();
+      } else {
+        await otpFunc.generateOtp(email, Otp);
+      }
+      const userData = {
+        email: req.body.email,
+        Otp: Otp,
+      };
+      const send = await mailer.sendMail(userData);
+      const _id = getUser._id;
+      res.status(200).json({
+        message: "sucessfully otp  sent",
+        success: true,
+        data: { ...userData, _id },
+      });
     }
   } catch (error) {
     res.status(400).json({

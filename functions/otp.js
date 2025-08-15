@@ -1,8 +1,8 @@
 const otpModel = require("../models/otp");
 
-const generateOtp = async (email) => {
+const generateOtp = async (email,Otp) => {
   
-  const Otp = Math.floor(100000 + Math.random() * 900000).toString();
+  // const Otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   const genOtp = new otpModel({
     email,
