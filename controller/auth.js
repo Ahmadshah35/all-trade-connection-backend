@@ -5,7 +5,7 @@ const mailer = require("../helper/mailer");
 const mongoose = require("mongoose");
 const userProfile = require("../models/userProfile");
 const proProfile = require("../models/proProfile");
-const OtpModel = require("../models/otp")
+const OtpModel = require("../models/otp");
 const locationModel = require("../models/location");
 
 const signUp = async (req, res) => {
@@ -13,7 +13,9 @@ const signUp = async (req, res) => {
     const { type, email, password } = req.body;
     if (type === "User") {
       const validate = await func.validiateEmailUser(req);
-      if (validate) {
+      const validatePro = await func.validiateEmailPro(req);
+
+      if (validate || validatePro) {
         return res.status(200).json({
           success: false,
           message: "Email is Already Taken!",
@@ -27,14 +29,13 @@ const signUp = async (req, res) => {
         const Otp = Math.floor(100000 + Math.random() * 900000).toString();
 
         const getOtp = await OtpModel.findOne({ email: email });
-      
 
-         if (getOtp) {
+        if (getOtp) {
           getOtp.otp = Otp;
-         await getOtp.save();
-         } else {
-         await funcOtp.generateOtp(email,Otp)
-         }
+          await getOtp.save();
+        } else {
+          await funcOtp.generateOtp(email, Otp);
+        }
 
         const userData = {
           email,
@@ -52,7 +53,9 @@ const signUp = async (req, res) => {
       }
     } else if (type === "Professional") {
       const validate = await func.validiateEmailPro(req);
-      if (validate) {
+      const validateUser = await func.validiateEmailUser(req);
+
+      if (validate || validateUser) {
         return res.status(200).json({
           success: false,
           message: "Email is Already Taken!",
@@ -66,14 +69,13 @@ const signUp = async (req, res) => {
         const Otp = Math.floor(100000 + Math.random() * 900000).toString();
 
         const getOtp = await OtpModel.findOne({ email: email });
-      
 
-         if (getOtp) {
+        if (getOtp) {
           getOtp.otp = Otp;
           await getOtp.save();
         } else {
-         await funcOtp.generateOtp(email,Otp);
-         }
+          await funcOtp.generateOtp(email, Otp);
+        }
 
         const userData = {
           email,
@@ -129,7 +131,7 @@ const login = async (req, res) => {
             .json({ message: "Invalid password", success: false });
         }
         const token = jwt.sign(
-          { _id: pro._id, email: pro.email, type :pro.type },
+          { _id: pro._id, email: pro.email, type: pro.type },
           process.env.JWT_SECRET_TOKEN,
           { expiresIn: "5d" }
         );
@@ -160,7 +162,7 @@ const login = async (req, res) => {
           .json({ message: "Invalid password", success: false });
       }
       const token = jwt.sign(
-        { _id: user._id, email: user.email, type:user.type },
+        { _id: user._id, email: user.email, type: user.type },
         process.env.JWT_SECRET_TOKEN,
         { expiresIn: "5d" }
       );
@@ -330,7 +332,7 @@ const resetPassword = async (req, res) => {
         password,
         validateUser.password
       );
-      if (!userPassword){
+      if (!userPassword) {
         return res
           .status(200)
           .json({ message: "incorrect Password", success: false });
@@ -339,7 +341,9 @@ const resetPassword = async (req, res) => {
           validateUser._id,
           newPassword
         );
-        return res.status(200).json({ message: "password reset sucessfully", success:true });
+        return res
+          .status(200)
+          .json({ message: "password reset sucessfully", success: true });
       }
     }
   } catch (error) {
@@ -356,5 +360,5 @@ module.exports = {
   setNewPassword,
   deleteUser,
   deletePro,
-  resetPassword
+  resetPassword,
 };
