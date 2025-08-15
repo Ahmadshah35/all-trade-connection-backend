@@ -80,7 +80,7 @@ const getAllProject = async (userProfileId) => {
   const projects = await projectModel.find({
     userProfileId: userProfileId,
     isDeleted: false,
-  });
+  }).sort({ createdAt: -1 });;
   return projects;
 };
 
@@ -116,7 +116,7 @@ const getProjectCategory = async (req) => {
 };
 
 const getStatus = async (status) => {
-  const project = await projectModel.find({ status: status, isDeleted: false });
+  const project = await projectModel.find({ status: status, isDeleted: false }).sort({createdAt :-1});
   return project;
 };
 
@@ -193,7 +193,7 @@ const getProjectByStatusAndProProfileId = async (asignTo, status) => {
     .populate({
       path: "userProfileId",
       select: "-password",
-    });
+    }).sort({ createdAt: -1 }); // -1 = descending (latest first)
 
   return project;
 };
@@ -219,7 +219,7 @@ const getProjectByStatusAndUserId = async (userProfileId, status) => {
     .populate({
       path: "asignTo",
       select: "-password",
-    });
+    }).sort({ createdAt: -1 });
   return project;
 };
 
